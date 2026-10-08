@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <section class="hero">
+        <h1 class="titulo-pagina">¿A dónde quieres ir?</h1>
+        <p class="texto-secundario">
+          Consulta líneas, paraderos y alertas antes de salir.
+        </p>
+
+        <form class="busqueda" th:action="@{/buscar}" method="get">
+          <label class="solo-lectores" for="q">Buscar paradero</label>
+          <input
+            id="q"
+            class="busqueda__input"
+            name="q"
+            placeholder="Miraflores, Javier Prado…"
+          />
+          <button class="btn btn--principal" type="submit">Buscar</button>
+        </form>
+      </section>
+
+      <div
+        class="mensaje mensaje--aviso"
+        role="alert"
+        th:if="${alerta != null}"
+      >
+        <span class="mensaje__titulo" th:text="${alerta.titulo}"
+          >Título de la alerta</span
+        >
+        <span th:text="${alerta.descripcion}">Descripción de la alerta</span>
+      </div>
+
+      <section class="seccion">
+        <h2 class="titulo-seccion">Líneas disponibles</h2>
+
+        <div class="cuadricula" th:if="${!#lists.isEmpty(lineas)}">
+          <a
+            class="tarjeta tarjeta--enlace"
+            th:each="l : ${lineas}"
+            th:href="@{/lineas/{id}/paraderos(id=${l.id})}"
+          >
+            <img
+              class="tarjeta__imagen"
+              th:if="${l.imagenUrl != null}"
+              th:src="${l.imagenUrl}"
+              th:alt="${l.nombre}"
+            />
+            <div
+              class="tarjeta__imagen tarjeta__imagen--vacia"
+              th:unless="${l.imagenUrl != null}"
+            >
+              Foto de la línea
+            </div>
+            <div class="tarjeta__cuerpo">
+              <h3 class="tarjeta__titulo" th:text="${l.nombre}">Línea Azul</h3>
+              <p
+                class="tarjeta__detalle"
+                th:text="'S/ ' + ${#numbers.formatDecimal(l.costoPasaje, 1, 'NONE', 2, 'POINT')} + ' por viaje'"
+              >
+                S/ 1.50 por viaje
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div class="vacio" th:if="${#lists.isEmpty(lineas)}">
+          <p class="vacio__titulo">Aún no hay líneas</p>
+          <p>Cuando el administrador las agregue, aparecerán aquí.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>

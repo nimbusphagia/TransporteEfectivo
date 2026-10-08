@@ -1,0 +1,77 @@
+<!doctype html>
+<html
+  lang="es"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <body>
+    <nav class="menu" aria-label="Principal" th:fragment="navbar">
+      <!-- Visitante y pasajero -->
+      <a
+        class="menu__enlace"
+        th:href="@{/lineas}"
+        sec:authorize="!hasRole('ADMIN')"
+        >Líneas</a
+      >
+      <a
+        class="menu__enlace"
+        th:href="@{/alertas}"
+        sec:authorize="!hasRole('ADMIN')"
+        >Alertas</a
+      >
+
+      <!-- Solo pasajero -->
+      <a
+        class="menu__enlace"
+        th:href="@{/reportes}"
+        sec:authorize="hasRole('PASAJERO')"
+        >Mis reportes</a
+      >
+
+      <!-- Solo administrador -->
+      <a
+        class="menu__enlace"
+        th:href="@{/admin/lineas}"
+        sec:authorize="hasRole('ADMIN')"
+        >Líneas</a
+      >
+      <a
+        class="menu__enlace"
+        th:href="@{/admin/paraderos}"
+        sec:authorize="hasRole('ADMIN')"
+        >Paraderos</a
+      >
+      <a
+        class="menu__enlace"
+        th:href="@{/admin/alertas}"
+        sec:authorize="hasRole('ADMIN')"
+        >Alertas</a
+      >
+      <a
+        class="menu__enlace"
+        th:href="@{/admin/reportes}"
+        sec:authorize="hasRole('ADMIN')"
+        >Reportes</a
+      >
+
+      <!-- Sin sesión -->
+      <div class="menu__usuario" sec:authorize="isAnonymous()">
+        <a class="btn btn--texto btn--peque" th:href="@{/login}">Ingresar</a>
+        <a class="btn btn--principal btn--peque" th:href="@{/registro}"
+          >Registrarse</a
+        >
+      </div>
+
+      <!-- Con sesión (muestra el correo; para mostrar el nombre completo,
+         CustomUserDetailsService debe exponerlo) -->
+      <div class="menu__usuario" sec:authorize="isAuthenticated()">
+        <span class="texto-secundario" sec:authentication="name">usuario</span>
+        <form th:action="@{/logout}" method="post">
+          <button class="btn btn--secundario btn--peque" type="submit">
+            Cerrar sesión
+          </button>
+        </form>
+      </div>
+    </nav>
+  </body>
+</html>

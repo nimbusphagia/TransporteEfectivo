@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head(titulo)">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${titulo} + ' · Transporte Eficiente'">
+      Transporte Eficiente
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/app.css}" />
+  </head>
+
+  <body>
+    <header class="cabecera" th:fragment="header">
+      <div class="cabecera__interior contenedor contenedor--completo">
+        <a class="marca" th:href="@{/}">Transporte Eficiente</a>
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+      </div>
+    </header>
+
+    <th:block th:fragment="mensajes">
+      <div
+        class="mensaje mensaje--exito"
+        role="status"
+        th:if="${exito}"
+        th:text="${exito}"
+      ></div>
+      <div
+        class="mensaje mensaje--error"
+        role="alert"
+        th:if="${error}"
+        th:text="${error}"
+      ></div>
+    </th:block>
+
+    <footer class="pie" th:fragment="footer">
+      <div class="contenedor contenedor--completo">
+        © 2026 Transporte Eficiente · Cibertec
+      </div>
+    </footer>
+  </body>
+</html>
