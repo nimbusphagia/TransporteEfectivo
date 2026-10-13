@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gestionar Alertas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="contenedor pagina">
+    <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+    <div class="pila">
+        <div class="fila fila--entre">
+            <h1 class="titulo-pagina">Gestión de alertas de tráfico</h1>
+        </div>
+
+        <section class="seccion">
+            <form th:action="@{/admin/alertas/guardar}" th:object="${alerta}" method="post" class="formulario pila">
+                <input type="hidden" th:field="*{alertaId}" />
+
+                <div class="campo">
+                    <label class="campo__etiqueta" for="titulo">Título de la alerta</label>
+                    <input class="campo__input" type="text" id="titulo" th:field="*{titulo}" required maxlength="100" />
+                </div>
+
+                <div class="campo">
+                    <label class="campo__etiqueta" for="descripcion">Descripción</label>
+                    <textarea class="campo__input" id="descripcion" th:field="*{descripcion}" rows="3" required maxlength="500"></textarea>
+                </div>
+
+                <div class="fila">
+                    <button type="submit" class="btn btn--principal">Guardar alerta</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="seccion">
+            <h2 class="titulo-seccion">Alertas registradas</h2>
+
+            <div th:if="${#lists.isEmpty(alertas)}" class="estado-vacio">
+                <p class="texto-secundario">No hay alertas registradas.</p>
+            </div>
+
+            <table th:unless="${#lists.isEmpty(alertas)}" class="tabla">
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Fecha y hora</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${alertas}">
+                    <td th:text="${a.titulo}"></td>
+                    <td th:text="${a.descripcion}"></td>
+                    <td th:text="${#temporals.format(a.horaReporte, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                        <a class="btn btn--secundario" th:href="@{/admin/alertas/eliminar/{id}(id=${a.alertaId})}">Resolver / Eliminar</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
