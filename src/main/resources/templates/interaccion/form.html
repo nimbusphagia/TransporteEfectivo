@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head('Nuevo reporte')}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <h1 class="titulo-pagina">Enviar queja o sugerencia</h1>
+      <p class="texto-secundario">
+        Tu reporte quedará asociado a tu cuenta y será enviado al administrador.
+      </p>
+
+      <div class="vacio seccion" th:if="${#lists.isEmpty(lineas)}">
+        <h2 class="vacio__titulo">No hay líneas disponibles</h2>
+        <p>No es posible enviar un reporte hasta que haya líneas activas.</p>
+        <a class="btn btn--secundario" th:href="@{/reportes}">Volver a mis reportes</a>
+      </div>
+
+      <form
+        class="formulario seccion"
+        th:if="${!#lists.isEmpty(lineas)}"
+        th:action="@{/reportes}"
+        th:object="${interaccionForm}"
+        method="post"
+        novalidate
+      >
+        <div class="campo">
+          <label for="tipo">Tipo de reporte</label>
+          <select id="tipo" class="input" th:field="*{tipo}" th:errorclass="input--error">
+            <option value="">Selecciona una opción</option>
+            <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}">QUEJA</option>
+          </select>
+          <p class="campo__error" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="lineaId">Línea relacionada</label>
+          <select id="lineaId" class="input" th:field="*{lineaId}" th:errorclass="input--error">
+            <option value="">Selecciona una línea</option>
+            <option th:each="linea : ${lineas}" th:value="${linea.id}" th:text="${linea.nombre}">
+              Línea Azul
+            </option>
+          </select>
+          <p class="campo__error" th:if="${#fields.hasErrors('lineaId')}" th:errors="*{lineaId}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="comentario">Comentario</label>
+          <textarea
+            id="comentario"
+            class="input"
+            rows="5"
+            maxlength="1000"
+            th:field="*{comentario}"
+            th:errorclass="input--error"
+            aria-describedby="comentario-ayuda"
+          ></textarea>
+          <p id="comentario-ayuda" class="campo__ayuda">Máximo 1000 caracteres.</p>
+          <p
+            class="campo__error"
+            th:if="${#fields.hasErrors('comentario')}"
+            th:errors="*{comentario}"
+          ></p>
+        </div>
+
+        <div class="fila">
+          <button class="btn btn--principal" type="submit">Enviar reporte</button>
+          <a class="btn btn--secundario" th:href="@{/reportes}">Cancelar</a>
+        </div>
+      </form>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>

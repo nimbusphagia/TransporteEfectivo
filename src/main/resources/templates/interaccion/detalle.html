@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head('Detalle del reporte')}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <h1 class="titulo-pagina">Detalle del reporte</h1>
+      <dl class="seccion pila">
+        <div>
+          <dt class="texto-secundario">Tipo</dt>
+          <dd th:text="${reporte.tipo}">QUEJA</dd>
+        </div>
+        <div>
+          <dt class="texto-secundario">Línea</dt>
+          <dd th:text="${reporte.linea.nombre}">Línea Azul</dd>
+        </div>
+        <div>
+          <dt class="texto-secundario">Comentario</dt>
+          <dd th:text="${reporte.comentario}">Comentario del pasajero</dd>
+        </div>
+        <div>
+          <dt class="texto-secundario">Estado</dt>
+          <dd th:text="${reporte.estado}">PENDIENTE</dd>
+        </div>
+        <div>
+          <dt class="texto-secundario">Fecha</dt>
+          <dd th:text="${#temporals.format(reporte.createdAt, 'dd/MM/yyyy HH:mm')}">
+            18/10/2026 12:00
+          </dd>
+        </div>
+      </dl>
+      <a class="btn btn--secundario" th:href="@{/reportes}">Volver a mis reportes</a>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>
