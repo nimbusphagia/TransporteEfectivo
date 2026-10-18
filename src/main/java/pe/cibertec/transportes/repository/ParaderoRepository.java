@@ -29,4 +29,9 @@ public interface ParaderoRepository extends JpaRepository<Paradero, Long> {
   @Query("select coalesce(max(p.orden), 0) from Paradero p "
       + "where p.linea.id = :lineaId and p.activo = true")
   Integer maxOrdenActivo(@Param("lineaId") Long lineaId);
+
+
+  @Query("SELECT p FROM Paradero p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) AND p.activo = true")
+  List<Paradero> buscarPorNombreActivo(@Param("nombre") String nombre);
+
 }
