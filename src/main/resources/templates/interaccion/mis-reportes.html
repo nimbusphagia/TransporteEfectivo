@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head('Mis reportes')}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <div class="fila fila--entre">
+        <h1 class="titulo-pagina">Mis reportes</h1>
+        <a class="btn btn--principal" th:href="@{/reportes/nuevo}">Enviar reporte</a>
+      </div>
+
+      <div class="vacio seccion" th:if="${#lists.isEmpty(reportes)}">
+        <h2 class="vacio__titulo">Aún no tienes reportes</h2>
+        <p>Cuando envíes una queja o sugerencia, aparecerá aquí.</p>
+      </div>
+
+      <div class="tabla-contenedor seccion" th:unless="${#lists.isEmpty(reportes)}">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th scope="col">Tipo</th>
+              <th scope="col">Línea</th>
+              <th scope="col">Comentario</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Fecha</th>
+              <th scope="col"><span class="solo-lectores">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="reporte : ${reportes}">
+              <td th:text="${reporte.tipo}">QUEJA</td>
+              <td th:text="${reporte.linea.nombre}">Línea Azul</td>
+              <td th:text="${reporte.comentario}">Comentario del pasajero</td>
+              <td>
+                <span
+                  class="etiqueta"
+                  th:classappend="${reporte.estado.name() == 'PENDIENTE'} ? ' etiqueta--aviso' : ' etiqueta--exito'"
+                  th:text="${reporte.estado}"
+                >PENDIENTE</span>
+              </td>
+              <td th:text="${#temporals.format(reporte.createdAt, 'dd/MM/yyyy HH:mm')}">
+                18/10/2026 12:00
+              </td>
+              <td>
+                <a
+                  class="btn btn--texto btn--peque"
+                  th:href="@{/reportes/{id}(id=${reporte.id})}"
+                  aria-label="Ver detalle del reporte"
+                  >Ver</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>
