@@ -103,4 +103,11 @@ public class ParaderoService {
       throw new ConflictException("La posición " + orden + " ya está ocupada en esta línea.");
     }
   }
+
+  public List<Paradero> buscarPorNombre(String termino) {
+    if (termino == null || termino.trim().isEmpty()) {
+      return List.of();
+    }
+    return paraderoRepository.buscarPorNombreActivo(termino.trim());
+  }
 }

@@ -6,12 +6,19 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.RequiredArgsConstructor;
 import pe.cibertec.transportes.entity.AlertaTrafico;
 import pe.cibertec.transportes.entity.LineaTransporte;
+import pe.cibertec.transportes.entity.Paradero;
+import pe.cibertec.transportes.service.ParaderoService;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+
+  private final ParaderoService paraderoService;
 
   @GetMapping("/")
   public String inicio(Model model) {
@@ -20,17 +27,31 @@ public class HomeController {
     return "home/index";
   }
 
-  // mockup data
+  @GetMapping("/buscar")
+  public String buscar(@RequestParam(name = "q", required = false) String q, Model model) {
+    model.addAttribute("lineas", lineasDeEjemplo());
+    model.addAttribute("alerta", alertaDeEjemplo());
+
+    if (q != null && !q.trim().isEmpty()) {
+      List<Paradero> resultados = paraderoService.buscarPorNombre(q.trim());
+      model.addAttribute("query", q.trim());
+      model.addAttribute("resultadosBusqueda", resultados);
+    }
+
+    return "home/index";
+  }
+
+  // mockup data existente...
   private List<LineaTransporte> lineasDeEjemplo() {
     return List.of(
-        linea(1L, "Línea Azul", "1.50"),
-        linea(2L, "El Rápido", "2.00"),
-        linea(3L, "Metropolitano", "2.50"),
-        linea(4L, "Corredor Rojo", "1.80"),
-        linea(5L, "Corredor Morado", "2.20"),
-        linea(6L, "Corredor Verde", "1.50"),
-        linea(7L, "Expreso Sur", "3.00"),
-        linea(8L, "Circuito Costa Verde", "2.00"));
+            linea(1L, "Línea Azul", "1.50"),
+            linea(2L, "El Rápido", "2.00"),
+            linea(3L, "Metropolitano", "2.50"),
+            linea(4L, "Corredor Rojo", "1.80"),
+            linea(5L, "Corredor Morado", "2.20"),
+            linea(6L, "Corredor Verde", "1.50"),
+            linea(7L, "Expreso Sur", "3.00"),
+            linea(8L, "Circuito Costa Verde", "2.00"));
   }
 
   private LineaTransporte linea(Long id, String nombre, String costo) {
