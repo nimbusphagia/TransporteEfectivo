@@ -7,23 +7,22 @@
 <main class="contenedor pagina">
     <div th:replace="~{fragments/layout :: mensajes}"></div>
 
-    <div class="pila">
-        <h1 class="titulo-pagina">Alertas de tráfico</h1>
+    <h1 class="titulo-pagina">Alertas de tráfico</h1>
 
-        <div th:if="${#lists.isEmpty(alertas)}" class="estado-vacio">
-            <p class="texto-secundario">No hay alertas de tráfico activas en este momento.</p>
-        </div>
+    <div th:if="${#lists.isEmpty(alertas)}" class="vacio">
+        <p class="vacio__titulo">No hay alertas activas</p>
+        <p>No hay alertas de tráfico activas en este momento.</p>
+    </div>
 
-        <div th:unless="${#lists.isEmpty(alertas)}" class="cuadricula">
-            <article class="tarjeta" th:each="alerta : ${alertas}">
-                <div class="tarjeta__contenido pila">
-                    <h2 class="tarjeta__titulo" th:text="${alerta.titulo}">Título de Alerta</h2>
-                    <p class="tarjeta__texto" th:text="${alerta.descripcion}">Descripción de la alerta...</p>
-                    <time class="texto-secundario texto-pequeno"
-                          th:text="${#temporals.format(alerta.horaReporte, 'dd/MM/yyyy HH:mm')}">Fecha</time>
-                </div>
-            </article>
-        </div>
+    <div th:unless="${#lists.isEmpty(alertas)}" class="cuadricula">
+        <article class="tarjeta" th:each="alerta : ${alertas}">
+            <div class="tarjeta__cuerpo">
+                <h2 class="tarjeta__titulo" th:text="${alerta.titulo}">Título de Alerta</h2>
+                <p class="tarjeta__detalle" th:text="${alerta.descripcion}">Descripción de la alerta...</p>
+                <time class="texto-secundario texto-pequeno"
+                      th:text="${#temporals.format(alerta.createdAt, 'dd/MM/yyyy HH:mm')}">Fecha</time>
+            </div>
+        </article>
     </div>
 </main>
 
