@@ -518,6 +518,123 @@ textarea.input {
   text-align: center;
 }
 
+
+/* ---------- Mapa ----------
+   <div id="mapa" class="mapa"></div>; con .mapa--alto para vistas de pantalla completa.
+   isolation evita que los controles de Leaflet (z-index alto) tapen otros elementos. */
+.mapa {
+  --color-marcador-usuario: #1a6fdb;
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  overflow: hidden;
+  background: var(--color-superficie);
+  isolation: isolate;
+}
+.mapa--alto {
+  height: 520px;
+}
+/* Respeta el atributo hidden aunque otra clase defina display */
+[hidden] {
+  display: none !important;
+}
+/* ---------- Mapa del itinerario ---------- */
+.mapa .ruta {
+  stroke: var(--color-boton);
+  stroke-width: 4px;
+  stroke-opacity: 0.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tabla tr[data-lat] {
+  cursor: pointer;
+}
+.tabla__fila--activa td {
+  background: var(--color-superficie);
+}
+
+@media (max-width: 640px) {
+  .mapa {
+    height: 320px;
+  }
+  .mapa--alto {
+    height: 400px;
+  }
+}
+.marcador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-fondo);
+  border-radius: var(--radio-pill);
+  background: var(--color-boton);
+  color: var(--color-fondo);
+  box-shadow: var(--sombra-suave);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semi);
+}
+.marcador--usuario {
+  background: var(--color-marcador-usuario);
+  box-shadow: 0 0 0 6px
+  color-mix(in srgb, var(--color-marcador-usuario) 25%, transparent);
+}
+
+.ubicacion {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--esp-4);
+  align-items: start;
+}
+.lista-puntos {
+  display: grid;
+  gap: var(--esp-3);
+  margin: var(--esp-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.punto {
+  padding: var(--esp-3);
+  cursor: pointer;
+}
+.punto:hover {
+  box-shadow: var(--sombra-suave);
+}
+.punto--activo {
+  border-color: var(--color-texto);
+}
+.punto__cabecera {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: flex-start;
+}
+.punto__titulo {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semi);
+}
+.punto__cabecera p {
+  margin: 0;
+}
+.punto__lineas {
+  display: grid;
+  gap: var(--esp-2);
+  margin: var(--esp-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.punto__linea {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--esp-2);
+  font-weight: var(--peso-medio);
+}
+
+@media (max-width: 900px) {
+  .ubicacion {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Adaptación y accesibilidad ---------- */
 @media (max-width: 640px) {
   .contenedor {

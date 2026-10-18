@@ -1,55 +1,98 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/layout :: head(${'Itinerario de ' + linea.nombre})}"></head>
-  <body>
-    <header th:replace="~{fragments/layout :: header}"></header>
+<head th:replace="~{fragments/layout :: head(${'Itinerario de ' + linea.nombre})}"></head>
+<body>
+<th:block th:replace="~{fragments/layout :: leaflet-css}"></th:block>
+<header th:replace="~{fragments/layout :: header}"></header>
 
-    <main class="contenedor pagina">
-      <div th:replace="~{fragments/layout :: mensajes}"></div>
+<main class="contenedor pagina">
+  <div th:replace="~{fragments/layout :: mensajes}"></div>
 
-      <div class="fila fila--entre">
-        <div>
-          <h1 class="titulo-pagina" th:text="${linea.nombre}">Línea Azul</h1>
-          <p
-            class="texto-secundario"
-            th:text="'Pasaje: S/ ' + ${#numbers.formatDecimal(linea.costoPasaje, 1, 'NONE', 2, 'POINT')} + ' por viaje'"
-          >
-            Pasaje: S/ 1.50 por viaje
-          </p>
-        </div>
-        <a class="btn btn--secundario" th:href="@{/lineas}">← Volver a líneas</a>
-      </div>
+  <div class="fila fila--entre">
+    <div>
+      <h1 class="titulo-pagina" th:text="${linea.nombre}">Línea Azul</h1>
+      <p
+              class="texto-secundario"
+              th:text="'Pasaje: S/ ' + ${#numbers.formatDecimal(linea.costoPasaje, 1, 'NONE', 2, 'POINT')} + ' por viaje'"
+      >
+        Pasaje: S/ 1.50 por viaje
+      </p>
+    </div>
+    <div class="fila">
+      <a class="btn btn--texto" th:href="@{/ubicacion}">Paraderos cerca de mí</a>
+      <a class="btn btn--secundario" th:href="@{/lineas}">← Volver a líneas</a>
+    </div>
+  </div>
 
-      <section class="seccion">
-        <h2 class="titulo-seccion">Itinerario</h2>
-        <p class="texto-secundario texto-pequeno">
-          Paraderos en el orden en que la línea los recorre.
-        </p>
+  <th:block
+          th:with="conCoordenadas=${paraderos.?[latitud != null and longitud != null]}"
+  >
+    <section class="seccion" th:if="${!#lists.isEmpty(conCoordenadas)}">
+      <h2 class="titulo-seccion">Mapa del recorrido</h2>
+      <p class="texto-secundario texto-pequeno">
+        Los paraderos se unen en orden con líneas rectas: es una referencia,
+        no el trazado real de la ruta. Toca un paradero para ver su nombre.
+      </p>
+      <div
+              id="mapa-itinerario"
+              class="mapa"
+              role="region"
+              aria-label="Mapa del itinerario"
+      ></div>
+      <p
+              class="texto-secundario texto-pequeno"
+              th:if="${#lists.size(conCoordenadas) lt #lists.size(paraderos)}"
+              th:text="|${#lists.size(paraderos) - #lists.size(conCoordenadas)} paradero(s) todavía no tienen ubicación y no aparecen en el mapa.|"
+      ></p>
+    </section>
+  </th:block>
 
-        <div class="tabla-contenedor" th:if="${!#lists.isEmpty(paraderos)}">
-          <table class="tabla">
-            <thead>
-              <tr>
-                <th>N.º</th>
-                <th>Paradero</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="p : ${paraderos}">
-                <td><span class="etiqueta" th:text="${p.orden}">1</span></td>
-                <td th:text="${p.nombre}">Av. Arequipa</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <section class="seccion">
+    <h2 class="titulo-seccion">Itinerario</h2>
+    <p class="texto-secundario texto-pequeno">
+      Paraderos en el orden en que la línea los recorre.
+    </p>
 
-        <div class="vacio" th:if="${#lists.isEmpty(paraderos)}">
-          <p class="vacio__titulo">Sin paraderos registrados</p>
-          <p>Esta línea todavía no tiene paraderos cargados.</p>
-        </div>
-      </section>
-    </main>
+    <div class="tabla-contenedor" th:if="${!#lists.isEmpty(paraderos)}">
+      <table class="tabla">
+        <thead>
+        <tr>
+          <th>N.º</th>
+          <th>Paradero</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+                th:each="p : ${paraderos}"
+                th:data-lat="${p.latitud}"
+                th:data-lng="${p.longitud}"
+                th:data-orden="${p.orden}"
+                th:data-nombre="${p.nombre}"
+        >
+          <td><span class="etiqueta" th:text="${p.orden}">1</span></td>
+          <td>
+            <span th:text="${p.nombre}">Av. Arequipa</span>
+            <span
+                    class="etiqueta etiqueta--aviso"
+                    th:if="${p.latitud == null or p.longitud == null}"
+            >Sin ubicación</span
+            >
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <footer th:replace="~{fragments/layout :: footer}"></footer>
-  </body>
+    <div class="vacio" th:if="${#lists.isEmpty(paraderos)}">
+      <p class="vacio__titulo">Sin paraderos registrados</p>
+      <p>Esta línea todavía no tiene paraderos cargados.</p>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<th:block th:replace="~{fragments/layout :: leaflet-js}"></th:block>
+<script th:src="@{/js/itinerario.js}"></script>
+</body>
 </html>

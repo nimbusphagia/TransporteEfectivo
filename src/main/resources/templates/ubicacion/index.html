@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cerca de mí')}"></head>
+<body>
+<th:block th:replace="~{fragments/layout :: leaflet-css}"></th:block>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="contenedor pagina">
+    <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+    <h1 class="titulo-pagina">Paraderos cerca de ti</h1>
+    <p class="texto-secundario">
+        Usa tu ubicación o toca un punto del mapa para ver qué líneas pasan por
+        los paraderos más cercanos. Es una guía de consulta: no muestra
+        tiempos en vivo ni calcula la mejor ruta.
+    </p>
+
+    <div class="fila">
+        <button id="btn-ubicacion" class="btn btn--principal" type="button">
+            Usar mi ubicación
+        </button>
+        <span
+                id="estado-ubicacion"
+                class="texto-secundario texto-pequeno"
+                role="status"
+                aria-live="polite"
+        ></span>
+    </div>
+
+    <div
+            id="aviso-ubicacion"
+            class="mensaje mensaje--aviso seccion"
+            role="alert"
+            hidden
+    ></div>
+
+    <section class="seccion ubicacion">
+        <div
+                id="mapa"
+                class="mapa mapa--alto"
+                role="region"
+                aria-label="Mapa de paraderos"
+                th:data-lat="${lat}"
+                th:data-lng="${lng}"
+        ></div>
+
+        <div class="ubicacion__lista">
+            <p class="texto-secundario" th:if="${puntos == null}">
+                Todavía no sabemos dónde estás. Pulsa «Usar mi ubicación» o toca un
+                punto del mapa.
+            </p>
+
+            <th:block th:if="${puntos != null}">
+                <h2 class="titulo-seccion">Los más cercanos</h2>
+                <p class="texto-secundario texto-pequeno">
+                    Distancias aproximadas, en línea recta. No son tiempos de
+                    caminata ni de llegada del bus.
+                </p>
+
+                <ol class="lista-puntos" th:if="${!#lists.isEmpty(puntos)}">
+                    <li
+                            class="tarjeta punto"
+                            th:each="p, iter : ${puntos}"
+                            th:data-lat="${p.latitud()}"
+                            th:data-lng="${p.longitud()}"
+                            th:data-nombre="${p.nombre()}"
+                    >
+                        <div class="punto__cabecera">
+                            <span class="etiqueta" th:text="${iter.count}">1</span>
+                            <div>
+                                <h3 class="punto__titulo" th:text="${p.nombre()}">
+                                    Av. Arequipa / Av. Javier Prado
+                                </h3>
+                                <p
+                                        class="texto-secundario texto-pequeno"
+                                        th:text="'A unos ' + ${p.distanciaTexto()}"
+                                >
+                                    A unos 120 m
+                                </p>
+                            </div>
+                        </div>
+
+                        <ul class="punto__lineas">
+                            <li th:each="l : ${p.lineas()}">
+                                <a
+                                        class="punto__linea"
+                                        th:href="@{/lineas/{id}/paraderos(id=${l.lineaId()})}"
+                                >
+                                    <span th:text="${l.lineaNombre()}">Corredor Azul</span>
+                                    <span
+                                            class="texto-secundario"
+                                            th:text="'S/ ' + ${#numbers.formatDecimal(l.costoPasaje(), 1, 'NONE', 2, 'POINT')}"
+                                    >S/ 1.50</span
+                                    >
+                                </a>
+                                <span
+                                        class="texto-secundario texto-pequeno"
+                                        th:if="${l.paraderoNombre() != p.nombre()}"
+                                        th:text="'Su paradero: ' + ${l.paraderoNombre()}"
+                                ></span>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="vacio" th:if="${#lists.isEmpty(puntos)}">
+                    <p class="vacio__titulo">No hay paraderos cerca</p>
+                    <p
+                            th:text="'No encontramos paraderos a menos de ' + ${radioMaximoKm} + ' km de ese punto. Prueba tocando otro lugar del mapa.'"
+                    >
+                        No encontramos paraderos a menos de 5 km de ese punto.
+                    </p>
+                </div>
+            </th:block>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<th:block th:replace="~{fragments/layout :: leaflet-js}"></th:block>
+<script th:src="@{/js/ubicacion.js}"></script>
+</body>
+</html>
