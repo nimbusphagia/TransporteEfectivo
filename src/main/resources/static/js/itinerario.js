@@ -1,80 +1,87 @@
-(function () {
-    "use strict";
+import {
+    hayLeaflet,
+    crearMapa,
+    iconoMarcador,
+    crearPopupTexto,
+    marcarActivo,
+} from "./mapa-base.js";
 
-    // Mismo proveedor que ubicacion.js: si cambian de proveedor, cámbienlo en ambos archivos.
-    var URL_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-    var ATRIBUCION =
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
-    var contenedor = document.getElementById("mapa-itinerario");
-    if (!contenedor) {
-        return;
+function leerParadas() {
+    const paradas = [];
+    for (const fila of document.querySelectorAll("tr[data-lat]")) {
+        const lat = Number.parseFloat(fila.dataset.lat);
+        const lng = Number.parseFloat(fila.dataset.lng);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) {
+            continue; // paradero sin ubicación
+        }
+        paradas.push({
+            fila,
+            posicion: [lat, lng],
+            orden: Number.parseInt(fila.dataset.orden, 10),
+            nombre: fila.dataset.nombre,
+        });
     }
-    if (typeof L === "undefined") {
+    return paradas;
+}
+
+function modificadorDe(indice, total) {
+    if (total < 2) return "";
+    if (indice === 0) return "marcador--inicio";
+    if (indice === total - 1) return "marcador--fin";
+    return "";
+}
+
+function iniciar() {
+    const contenedor = document.getElementById("mapa-itinerario");
+    if (!contenedor) return;
+
+    const paradas = leerParadas();
+    if (!hayLeaflet() || paradas.length === 0) {
         contenedor.hidden = true; // la tabla del itinerario sigue disponible
         return;
     }
 
-    var paradas = [];
-    document.querySelectorAll("tr[data-lat]").forEach(function (fila) {
-        var lat = parseFloat(fila.dataset.lat);
-        var lng = parseFloat(fila.dataset.lng);
-        if (isNaN(lat) || isNaN(lng)) {
-            return; // paradero sin ubicación
-        }
-        paradas.push({
-            fila: fila,
-            posicion: [lat, lng],
-            orden: parseInt(fila.dataset.orden, 10),
-            nombre: fila.dataset.nombre
-        });
-    });
-
-    if (paradas.length === 0) {
-        contenedor.hidden = true;
-        return;
-    }
-
-    var mapa = L.map(contenedor);
-    L.tileLayer(URL_TILES, { maxZoom: 19, attribution: ATRIBUCION }).addTo(mapa);
-
-    var posiciones = paradas.map(function (p) {
-        return p.posicion;
-    });
+    const mapa = crearMapa(contenedor);
+    const posiciones = paradas.map(({ posicion }) => posicion);
 
     if (posiciones.length > 1) {
+        L.polyline(posiciones, { className: "ruta-borde", interactive: false }).addTo(mapa);
         L.polyline(posiciones, { className: "ruta", interactive: false }).addTo(mapa);
     }
 
-    function activar(filaActiva) {
-        paradas.forEach(function (p) {
-            p.fila.classList.toggle("tabla__fila--activa", p.fila === filaActiva);
-        });
-    }
+    let activa = null;
+    const activar = (fila, marcador) => {
+        if (activa) {
+            activa.fila.classList.remove("tabla__fila--activa");
+            marcarActivo(activa.marcador, false);
+        }
+        fila.classList.add("tabla__fila--activa");
+        marcarActivo(marcador, true);
+        activa = { fila, marcador };
+    };
 
-    paradas.forEach(function (parada) {
-        var titulo = document.createElement("strong");
-        titulo.textContent = parada.orden + ". " + parada.nombre;
-
-        var marcador = L.marker(parada.posicion, {
-            icon: L.divIcon({
-                className: "marcador",
-                html: String(parada.orden),
-                iconSize: [28, 28]
-            }),
-            title: parada.nombre
+    paradas.forEach((parada, i) => {
+        const marcador = L.marker(parada.posicion, {
+            icon: iconoMarcador(parada.orden, modificadorDe(i, paradas.length)),
+            title: parada.nombre,
         })
-            .bindPopup(titulo)
+            .bindPopup(crearPopupTexto(`${parada.orden}. ${parada.nombre}`))
             .addTo(mapa);
 
-        marcador.on("click", function () {
-            activar(parada.fila);
-        });
-        parada.fila.addEventListener("click", function () {
-            activar(parada.fila);
+        const seleccionar = () => {
+            activar(parada.fila, marcador);
             mapa.setView(parada.posicion, 17);
             marcador.openPopup();
             contenedor.scrollIntoView({ block: "nearest" });
+        };
+
+        marcador.on("click", () => activar(parada.fila, marcador));
+        parada.fila.addEventListener("click", seleccionar);
+        parada.fila.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                seleccionar();
+            }
         });
     });
 
@@ -83,4 +90,6 @@
     } else {
         mapa.setView(posiciones[0], 16);
     }
-})();
+}
+
+iniciar();

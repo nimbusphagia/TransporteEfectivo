@@ -1,83 +1,84 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/layout :: head('Gestionar líneas')}"></head>
-  <body>
-    <header th:replace="~{fragments/layout :: header}"></header>
+<head th:replace="~{fragments/layout :: head('Gestionar líneas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
 
-    <main class="contenedor pagina">
-      <div th:replace="~{fragments/layout :: mensajes}"></div>
+<main class="contenedor pagina">
+  <div th:replace="~{fragments/layout :: mensajes}"></div>
 
-      <div class="fila fila--entre">
-        <h1 class="titulo-pagina">Líneas de transporte</h1>
-        <a class="btn btn--principal" th:href="@{/admin/lineas/nueva}">Nueva línea</a>
-      </div>
-      <p class="texto-secundario">
-        Desactivar una línea solo la oculta al público; sus paraderos y reportes se conservan.
-      </p>
+  <div class="fila fila--entre">
+    <h1 class="titulo-pagina">Líneas de transporte</h1>
+    <a class="btn btn--principal" th:href="@{/admin/lineas/nueva}">Nueva línea</a>
+  </div>
+  <p class="texto-secundario">
+    Desactivar una línea solo la oculta al público; sus paraderos y reportes se conservan.
+  </p>
 
-      <section class="seccion">
-        <div class="tabla-contenedor" th:if="${!#lists.isEmpty(lineas)}">
-          <table class="tabla">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Costo</th>
-                <th>Estado</th>
-                <th><span class="solo-lectores">Acciones</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="l : ${lineas}">
-                <td th:text="${l.nombre}">Línea Azul</td>
-                <td
+  <section class="seccion">
+    <div class="tabla-contenedor" th:if="${!#lists.isEmpty(lineas)}">
+      <table class="tabla">
+        <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Costo</th>
+          <th>Estado</th>
+          <th><span class="solo-lectores">Acciones</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${lineas}">
+          <td th:text="${l.nombre}">Línea Azul</td>
+          <td
                   th:text="'S/ ' + ${#numbers.formatDecimal(l.costoPasaje, 1, 'NONE', 2, 'POINT')}"
-                >
-                  S/ 1.50
-                </td>
-                <td>
-                  <span class="etiqueta etiqueta--exito" th:if="${l.activo}">Activa</span>
-                  <span class="etiqueta" th:unless="${l.activo}">Inactiva</span>
-                </td>
-                <td>
-                  <div class="tabla__acciones">
-                    <a
-                      class="btn btn--texto btn--peque"
-                      th:href="@{/admin/paraderos(lineaId=${l.id})}"
-                      >Paraderos</a
-                    >
-                    <a
+          >
+            S/ 1.50
+          </td>
+          <td>
+            <span class="etiqueta etiqueta--exito" th:if="${l.activo}">Activa</span>
+            <span class="etiqueta" th:unless="${l.activo}">Inactiva</span>
+          </td>
+          <td>
+            <div class="tabla__acciones">
+              <a
                       class="btn btn--secundario btn--peque"
                       th:href="@{/admin/lineas/{id}/editar(id=${l.id})}"
-                      >Editar</a
-                    >
-                    <form
+              >Editar</a
+              >
+              <a
+                      class="btn btn--texto btn--peque"
+                      th:href="@{/admin/paraderos(lineaId=${l.id})}"
+              >Paraderos</a
+              >
+              <form
                       th:if="${l.activo}"
                       th:action="@{/admin/lineas/{id}/desactivar(id=${l.id})}"
                       method="post"
-                    >
-                      <button class="btn btn--texto btn--peque" type="submit">Desactivar</button>
-                    </form>
-                    <form
+                      onsubmit="return confirm('¿Desactivar esta línea? Dejará de mostrarse al público.')"
+              >
+                <button class="btn btn--texto btn--peque" type="submit">Desactivar</button>
+              </form>
+              <form
                       th:unless="${l.activo}"
                       th:action="@{/admin/lineas/{id}/activar(id=${l.id})}"
                       method="post"
-                    >
-                      <button class="btn btn--texto btn--peque" type="submit">Activar</button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              >
+                <button class="btn btn--texto btn--peque" type="submit">Activar</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
-        <div class="vacio" th:if="${#lists.isEmpty(lineas)}">
-          <p class="vacio__titulo">No hay líneas registradas</p>
-          <p>Crea la primera con el botón «Nueva línea».</p>
-        </div>
-      </section>
-    </main>
+    <div class="vacio" th:if="${#lists.isEmpty(lineas)}">
+      <p class="vacio__titulo">No hay líneas registradas</p>
+      <p>Crea la primera con el botón «Nueva línea».</p>
+    </div>
+  </section>
+</main>
 
-    <footer th:replace="~{fragments/layout :: footer}"></footer>
-  </body>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
 </html>

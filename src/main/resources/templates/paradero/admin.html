@@ -1,139 +1,151 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/layout :: head('Gestionar paraderos')}"></head>
-  <body>
-    <header th:replace="~{fragments/layout :: header}"></header>
+<head th:replace="~{fragments/layout :: head('Gestionar paraderos')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
 
-    <main class="contenedor pagina">
-      <div th:replace="~{fragments/layout :: mensajes}"></div>
+<main class="contenedor pagina">
+  <div th:replace="~{fragments/layout :: mensajes}"></div>
 
-      <div class="fila fila--entre">
-        <h1 class="titulo-pagina">Paraderos</h1>
-        <a
-          class="btn btn--principal"
-          th:if="${lineaSeleccionada != null and lineaSeleccionada.activo}"
-          th:href="@{/admin/paraderos/nuevo(lineaId=${lineaSeleccionada.id})}"
-          >Nuevo paradero</a
+  <div class="fila fila--entre">
+    <h1 class="titulo-pagina">Paraderos</h1>
+    <a
+            class="btn btn--principal"
+            th:if="${lineaSeleccionada != null and lineaSeleccionada.activo}"
+            th:href="@{/admin/paraderos/nuevo(lineaId=${lineaSeleccionada.id})}"
+    >Nuevo paradero</a
+    >
+  </div>
+
+  <div class="vacio" th:if="${#lists.isEmpty(lineas)}">
+    <p class="vacio__titulo">Primero crea una línea</p>
+    <p>Los paraderos se agregan a una línea existente.</p>
+    <a class="btn btn--secundario" th:href="@{/admin/lineas/nueva}">Nueva línea</a>
+  </div>
+
+  <th:block th:if="${lineaSeleccionada != null}">
+    <form class="formulario seccion" th:action="@{/admin/paraderos}" method="get">
+      <div class="campo">
+        <label for="lineaId">Línea</label>
+        <select
+                id="lineaId"
+                name="lineaId"
+                class="input"
+                onchange="this.form.submit()"
         >
+          <option
+                  th:each="l : ${lineas}"
+                  th:value="${l.id}"
+                  th:text="${l.activo} ? ${l.nombre} : ${l.nombre} + ' (inactiva)'"
+                  th:selected="${l.id == lineaSeleccionada.id}"
+          >
+            Línea Azul
+          </option>
+        </select>
       </div>
+      <noscript>
+        <button class="btn btn--secundario" type="submit">Ver paraderos</button>
+      </noscript>
+    </form>
 
-      <div class="vacio" th:if="${#lists.isEmpty(lineas)}">
-        <p class="vacio__titulo">Primero crea una línea</p>
-        <p>Los paraderos se agregan a una línea existente.</p>
-        <a class="btn btn--secundario" th:href="@{/admin/lineas/nueva}">Nueva línea</a>
-      </div>
+    <div class="mensaje mensaje--aviso" role="status" th:unless="${lineaSeleccionada.activo}">
+      <span class="mensaje__titulo">Esta línea está desactivada</span>
+      Sus paraderos no se muestran al público. Actívala desde «Líneas» para agregar paraderos.
+    </div>
 
-      <th:block th:if="${lineaSeleccionada != null}">
-        <form class="formulario seccion" th:action="@{/admin/paraderos}" method="get">
-          <div class="campo">
-            <label for="lineaId">Línea</label>
-            <select id="lineaId" name="lineaId" class="input">
-              <option
-                th:each="l : ${lineas}"
-                th:value="${l.id}"
-                th:text="${l.activo} ? ${l.nombre} : ${l.nombre} + ' (inactiva)'"
-                th:selected="${l.id == lineaSeleccionada.id}"
-              >
-                Línea Azul
-              </option>
-            </select>
-          </div>
-          <button class="btn btn--secundario" type="submit">Ver paraderos</button>
-        </form>
+    <section class="seccion">
+      <h2 class="titulo-seccion" th:text="'Itinerario de ' + ${lineaSeleccionada.nombre}">
+        Itinerario
+      </h2>
 
-        <div class="mensaje mensaje--aviso" role="status" th:unless="${lineaSeleccionada.activo}">
-          <span class="mensaje__titulo">Esta línea está desactivada</span>
-          Sus paraderos no se muestran al público. Actívala desde «Líneas» para agregar paraderos.
-        </div>
-
-        <section class="seccion">
-          <h2 class="titulo-seccion" th:text="'Itinerario de ' + ${lineaSeleccionada.nombre}">
-            Itinerario
-          </h2>
-
-          <div class="tabla-contenedor" th:if="${!#lists.isEmpty(paraderos)}">
-            <table class="tabla">
-              <thead>
-                <tr>
-                  <th>Posición</th>
-                  <th>Nombre</th>
-                  <th>Coordenadas</th>
-                  <th>Estado</th>
-                  <th><span class="solo-lectores">Acciones</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="p : ${paraderos}">
-                  <td th:text="${p.orden}">1</td>
-                  <td th:text="${p.nombre}">Av. Arequipa</td>
-                  <td class="texto-secundario">
-                    <span
-                      th:if="${p.latitud != null}"
-                      th:text="${p.latitud} + ', ' + ${p.longitud}"
-                      >-12.05, -77.04</span
-                    >
-                    <span th:unless="${p.latitud != null}">—</span>
-                  </td>
-                  <td>
-                    <span class="etiqueta etiqueta--exito" th:if="${p.activo}">Activo</span>
-                    <span class="etiqueta" th:unless="${p.activo}">Inactivo</span>
-                  </td>
-                  <td>
-                    <div class="tabla__acciones">
-                      <th:block th:if="${p.activo}">
-                        <form th:action="@{/admin/paraderos/{id}/subir(id=${p.id})}" method="post">
-                          <button
+      <div class="tabla-contenedor" th:if="${!#lists.isEmpty(paraderos)}">
+        <table class="tabla">
+          <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Nombre</th>
+            <th>Coordenadas</th>
+            <th>Estado</th>
+            <th><span class="solo-lectores">Acciones</span></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="p : ${paraderos}">
+            <td>
+              <div class="fila">
+                <span th:text="${p.orden}">1</span>
+                <th:block th:if="${p.activo}">
+                  <form th:action="@{/admin/paraderos/{id}/subir(id=${p.id})}" method="post">
+                    <button
                             class="btn btn--texto btn--peque"
                             type="submit"
                             th:aria-label="'Subir ' + ${p.nombre}"
-                          >
-                            ↑
-                          </button>
-                        </form>
-                        <form th:action="@{/admin/paraderos/{id}/bajar(id=${p.id})}" method="post">
-                          <button
+                    >
+                      ↑
+                    </button>
+                  </form>
+                  <form th:action="@{/admin/paraderos/{id}/bajar(id=${p.id})}" method="post">
+                    <button
                             class="btn btn--texto btn--peque"
                             type="submit"
                             th:aria-label="'Bajar ' + ${p.nombre}"
-                          >
-                            ↓
-                          </button>
-                        </form>
-                      </th:block>
-                      <a
+                    >
+                      ↓
+                    </button>
+                  </form>
+                </th:block>
+              </div>
+            </td>
+            <td th:text="${p.nombre}">Av. Arequipa</td>
+            <td class="texto-secundario">
+                    <span
+                            th:if="${p.latitud != null}"
+                            th:text="${p.latitud} + ', ' + ${p.longitud}"
+                    >-12.05, -77.04</span
+                    >
+              <span th:unless="${p.latitud != null}">—</span>
+            </td>
+            <td>
+              <span class="etiqueta etiqueta--exito" th:if="${p.activo}">Activo</span>
+              <span class="etiqueta" th:unless="${p.activo}">Inactivo</span>
+            </td>
+            <td>
+              <div class="tabla__acciones">
+                <a
                         class="btn btn--secundario btn--peque"
                         th:href="@{/admin/paraderos/{id}/editar(id=${p.id})}"
-                        >Editar</a
-                      >
-                      <form
+                >Editar</a
+                >
+                <form
                         th:if="${p.activo}"
                         th:action="@{/admin/paraderos/{id}/desactivar(id=${p.id})}"
                         method="post"
-                      >
-                        <button class="btn btn--texto btn--peque" type="submit">Desactivar</button>
-                      </form>
-                      <form
+                        onsubmit="return confirm('¿Desactivar este paradero?')"
+                >
+                  <button class="btn btn--texto btn--peque" type="submit">Desactivar</button>
+                </form>
+                <form
                         th:unless="${p.activo}"
                         th:action="@{/admin/paraderos/{id}/activar(id=${p.id})}"
                         method="post"
-                      >
-                        <button class="btn btn--texto btn--peque" type="submit">Activar</button>
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                >
+                  <button class="btn btn--texto btn--peque" type="submit">Activar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <div class="vacio" th:if="${#lists.isEmpty(paraderos)}">
-            <p class="vacio__titulo">Esta línea no tiene paraderos</p>
-            <p>Agrega el primero con el botón «Nuevo paradero».</p>
-          </div>
-        </section>
-      </th:block>
-    </main>
+      <div class="vacio" th:if="${#lists.isEmpty(paraderos)}">
+        <p class="vacio__titulo">Esta línea no tiene paraderos</p>
+        <p>Agrega el primero con el botón «Nuevo paradero».</p>
+      </div>
+    </section>
+  </th:block>
+</main>
 
-    <footer th:replace="~{fragments/layout :: footer}"></footer>
-  </body>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
 </html>
