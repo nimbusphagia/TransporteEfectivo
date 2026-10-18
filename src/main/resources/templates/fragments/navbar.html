@@ -14,17 +14,18 @@
         >Líneas</a
       >
       <a
-        class="menu__enlace"
-        th:href="@{/alertas}"
-        sec:authorize="!hasRole('ADMIN')"
-        >Alertas</a
-      >
-      <a
               class="menu__enlace"
               th:href="@{/ubicacion}"
               sec:authorize="!hasRole('ADMIN')"
       >Cerca de mí</a
       >
+      <a
+        class="menu__enlace"
+        th:href="@{/alertas}"
+        sec:authorize="!hasRole('ADMIN')"
+        >Alertas</a
+      >
+
 
       <!-- Solo pasajero -->
       <a
