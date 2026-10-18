@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mi perfil')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="contenedor pagina">
+  <div th:replace="~{fragments/layout :: mensajes}"></div>
+  <h1 class="titulo-pagina" th:text="${esAdmin} ? 'Perfil de administrador' : 'Mi perfil'">Mi perfil</h1>
+  <p class="texto-secundario">Consulta tus datos y administra la contraseña de tu cuenta.</p>
+
+  <section class="seccion">
+    <h2 class="titulo-seccion">Mis datos</h2>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <tbody>
+        <tr><th scope="row">Nombre completo</th><td th:text="${usuario.nombreCompleto}"></td></tr>
+        <tr><th scope="row">DNI</th><td th:text="${usuario.dni}"></td></tr>
+        <tr><th scope="row">Correo</th><td th:text="${usuario.correo}"></td></tr>
+        <tr><th scope="row">Rol</th><td><span class="etiqueta etiqueta--exito" th:text="${usuario.rol.nombre}"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="seccion" th:if="${esAdmin}">
+    <h2 class="titulo-seccion">Administración</h2>
+    <p class="texto-secundario">Accede a los módulos administrativos disponibles.</p>
+    <div class="fila">
+      <a class="btn btn--secundario" th:href="@{/admin/lineas}">Gestionar líneas</a>
+      <a class="btn btn--secundario" th:href="@{/admin/paraderos}">Gestionar paraderos</a>
+      <a class="btn btn--secundario" th:href="@{/admin/alertas}">Gestionar alertas</a>
+      <a class="btn btn--secundario" th:href="@{/admin/reportes}">Revisar reportes</a>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2 class="titulo-seccion">Cambiar contraseña</h2>
+    <form class="formulario" th:action="@{/perfil/contrasena}" th:object="${cambio}" method="post">
+      <div class="campo">
+        <label for="passwordActual">Contraseña actual</label>
+        <input class="input" type="password" id="passwordActual" name="passwordActual"
+               th:classappend="${#fields.hasErrors('passwordActual')} ? 'input--error'" autocomplete="current-password" required />
+        <p class="campo__error" th:if="${#fields.hasErrors('passwordActual')}" th:errors="*{passwordActual}"></p>
+      </div>
+      <div class="campo">
+        <label for="passwordNueva">Nueva contraseña</label>
+        <input class="input" type="password" id="passwordNueva" name="passwordNueva" minlength="8" maxlength="72"
+               th:classappend="${#fields.hasErrors('passwordNueva')} ? 'input--error'" autocomplete="new-password" required />
+        <p class="campo__ayuda">Utiliza entre 8 y 72 caracteres.</p>
+        <p class="campo__error" th:if="${#fields.hasErrors('passwordNueva')}" th:errors="*{passwordNueva}"></p>
+      </div>
+      <div class="campo">
+        <label for="confirmarPassword">Confirmar contraseña nueva</label>
+        <input class="input" type="password" id="confirmarPassword" name="confirmarPassword"
+               th:classappend="${#fields.hasErrors('confirmarPassword')} ? 'input--error'" autocomplete="new-password" required />
+        <p class="campo__error" th:if="${#fields.hasErrors('confirmarPassword')}" th:errors="*{confirmarPassword}"></p>
+      </div>
+      <button class="btn btn--principal" type="submit">Actualizar contraseña</button>
+    </form>
+  </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
