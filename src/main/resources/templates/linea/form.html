@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head(${lineaForm.esNueva() ? 'Nueva línea' : 'Editar línea'})}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <h1 class="titulo-pagina" th:text="${lineaForm.esNueva()} ? 'Nueva línea' : 'Editar línea'">
+        Nueva línea
+      </h1>
+
+      <form
+        class="formulario seccion"
+        th:action="@{/admin/lineas/guardar}"
+        th:object="${lineaForm}"
+        method="post"
+        novalidate
+      >
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            class="input"
+            type="text"
+            maxlength="100"
+            th:field="*{nombre}"
+            th:errorclass="input--error"
+            placeholder="Línea Azul"
+          />
+          <p class="campo__error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="costoPasaje">Costo del pasaje (S/)</label>
+          <input
+            id="costoPasaje"
+            class="input"
+            type="number"
+            step="0.01"
+            min="0.01"
+            th:field="*{costoPasaje}"
+            th:errorclass="input--error"
+            placeholder="1.50"
+          />
+          <p
+            class="campo__error"
+            th:if="${#fields.hasErrors('costoPasaje')}"
+            th:errors="*{costoPasaje}"
+          ></p>
+        </div>
+
+        <div class="campo">
+          <label for="imagenUrl">Imagen (opcional)</label>
+          <input
+            id="imagenUrl"
+            class="input"
+            type="text"
+            maxlength="255"
+            th:field="*{imagenUrl}"
+            th:errorclass="input--error"
+            placeholder="/img/linea_azul.jpg o https://..."
+          />
+          <p class="campo__ayuda">Si la dejas vacía se mostrará una imagen por defecto.</p>
+          <p
+            class="campo__error"
+            th:if="${#fields.hasErrors('imagenUrl')}"
+            th:errors="*{imagenUrl}"
+          ></p>
+        </div>
+
+        <div class="fila">
+          <button class="btn btn--principal" type="submit">Guardar</button>
+          <a class="btn btn--secundario" th:href="@{/admin/lineas}">Cancelar</a>
+        </div>
+      </form>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>

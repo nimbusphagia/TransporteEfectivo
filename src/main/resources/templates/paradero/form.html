@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: head(${paraderoForm.esNuevo() ? 'Nuevo paradero' : 'Editar paradero'})}"></head>
+  <body>
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="contenedor pagina">
+      <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+      <h1
+        class="titulo-pagina"
+        th:text="${paraderoForm.esNuevo()} ? 'Nuevo paradero' : 'Editar paradero'"
+      >
+        Nuevo paradero
+      </h1>
+
+      <form
+        class="formulario seccion"
+        th:action="@{/admin/paraderos/guardar}"
+        th:object="${paraderoForm}"
+        method="post"
+        novalidate
+      >
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="campo">
+          <label for="lineaId">Línea</label>
+          <select id="lineaId" class="input" th:field="*{lineaId}" th:errorclass="input--error">
+            <option value="">Selecciona una línea</option>
+            <option th:each="l : ${lineas}" th:value="${l.id}" th:text="${l.nombre}">
+              Línea Azul
+            </option>
+          </select>
+          <p class="campo__error" th:if="${#fields.hasErrors('lineaId')}" th:errors="*{lineaId}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="nombre">Nombre del paradero</label>
+          <input
+            id="nombre"
+            class="input"
+            type="text"
+            maxlength="100"
+            th:field="*{nombre}"
+            th:errorclass="input--error"
+            placeholder="Av. Arequipa / Av. Javier Prado"
+          />
+          <p class="campo__error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="orden">Posición en el recorrido</label>
+          <input
+            id="orden"
+            class="input"
+            type="number"
+            min="1"
+            step="1"
+            th:field="*{orden}"
+            th:errorclass="input--error"
+          />
+          <p class="campo__ayuda">1 es el primer paradero de la línea.</p>
+          <p class="campo__error" th:if="${#fields.hasErrors('orden')}" th:errors="*{orden}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="latitud">Latitud (opcional)</label>
+          <input
+            id="latitud"
+            class="input"
+            type="number"
+            step="any"
+            th:field="*{latitud}"
+            th:errorclass="input--error"
+            placeholder="-12.0464"
+          />
+          <p class="campo__error" th:if="${#fields.hasErrors('latitud')}" th:errors="*{latitud}"></p>
+        </div>
+
+        <div class="campo">
+          <label for="longitud">Longitud (opcional)</label>
+          <input
+            id="longitud"
+            class="input"
+            type="number"
+            step="any"
+            th:field="*{longitud}"
+            th:errorclass="input--error"
+            placeholder="-77.0428"
+          />
+          <p class="campo__ayuda">
+            En Google Maps, clic derecho sobre el paradero para copiar sus coordenadas.
+          </p>
+          <p
+            class="campo__error"
+            th:if="${#fields.hasErrors('longitud')}"
+            th:errors="*{longitud}"
+          ></p>
+          <p
+            class="campo__error"
+            th:if="${#fields.hasErrors('coordenadasCompletas')}"
+            th:errors="*{coordenadasCompletas}"
+          ></p>
+        </div>
+
+        <div class="fila">
+          <button class="btn btn--principal" type="submit">Guardar</button>
+          <a
+            class="btn btn--secundario"
+            th:href="*{lineaId} != null ? @{/admin/paraderos(lineaId=*{lineaId})} : @{/admin/paraderos}"
+            >Cancelar</a
+          >
+        </div>
+      </form>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+  </body>
+</html>
