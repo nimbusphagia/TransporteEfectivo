@@ -65,7 +65,9 @@
       <!-- Con sesión (muestra el correo; para mostrar el nombre completo,
          CustomUserDetailsService debe exponerlo) -->
       <div class="menu__usuario" sec:authorize="isAuthenticated()">
-        <span class="texto-secundario" sec:authentication="name">usuario</span>
+        <span class="texto-secundario" sec:authentication="principal.nombreCompleto">usuario</span>
+        <a class="btn btn--texto btn--peque" th:href="@{/perfil}" sec:authorize="hasRole('PASAJERO')">Mi perfil</a>
+        <a class="btn btn--texto btn--peque" th:href="@{/admin/perfil}" sec:authorize="hasRole('ADMIN')">Mi perfil</a>
         <form th:action="@{/logout}" method="post">
           <button class="btn btn--secundario btn--peque" type="submit">
             Cerrar sesión
