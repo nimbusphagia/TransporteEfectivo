@@ -9,19 +9,9 @@
   <div th:replace="~{fragments/layout :: mensajes}"></div>
 
   <div class="fila fila--entre">
-    <div>
+      <a class="btn btn--texto btn--peque" th:href="@{/lineas}">← Líneas</a>
       <h1 class="titulo-pagina" th:text="${linea.nombre}">Línea Azul</h1>
-      <p
-              class="texto-secundario"
-              th:text="'Pasaje: S/ ' + ${#numbers.formatDecimal(linea.costoPasaje, 1, 'NONE', 2, 'POINT')} + ' por viaje'"
-      >
-        Pasaje: S/ 1.50 por viaje
-      </p>
-    </div>
-    <div class="fila">
-      <a class="btn btn--texto" th:href="@{/ubicacion}">Paraderos cerca de mí</a>
-      <a class="btn btn--secundario" th:href="@{/lineas}">← Volver a líneas</a>
-    </div>
+      <p class="texto-secundario" th:text="'Pasaje: S/ ' + ${#numbers.formatDecimal(linea.costoPasaje, 1, 'NONE', 2, 'POINT')}">Pasaje</p>
   </div>
 
   <th:block
@@ -63,6 +53,7 @@
         </thead>
         <tbody>
         <tr
+                tabindex="0"
                 th:each="p : ${paraderos}"
                 th:data-lat="${p.latitud}"
                 th:data-lng="${p.longitud}"
@@ -93,6 +84,6 @@
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 
 <th:block th:replace="~{fragments/layout :: leaflet-js}"></th:block>
-<script th:src="@{/js/itinerario.js}"></script>
+<script type="module" th:src="@{/js/itinerario.js}"></script>
 </body>
 </html>

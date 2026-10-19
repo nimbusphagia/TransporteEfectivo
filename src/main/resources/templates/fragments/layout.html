@@ -23,34 +23,18 @@
       </div>
     </header>
 
+    <th:block th:fragment="leaflet-css">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    </th:block>
+    <th:block th:fragment="leaflet-js">
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+              integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    </th:block>
+
     <th:block th:fragment="mensajes">
-      <th:block th:fragment="leaflet-css">
-        <link
-                rel="stylesheet"
-                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-                integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-                crossorigin=""
-        />
-      </th:block>
-      <th:block th:fragment="leaflet-js">
-        <script
-                src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-                crossorigin=""
-        ></script>
-      </th:block>
-      <div
-        class="mensaje mensaje--exito"
-        role="status"
-        th:if="${exito}"
-        th:text="${exito}"
-      ></div>
-      <div
-        class="mensaje mensaje--error"
-        role="alert"
-        th:if="${error}"
-        th:text="${error}"
-      ></div>
+      <div class="mensaje mensaje--exito" role="status" th:if="${exito}" th:text="${exito}"></div>
+      <div class="mensaje mensaje--error" role="alert" th:if="${error}" th:text="${error}"></div>
     </th:block>
 
     <footer class="pie" th:fragment="footer">

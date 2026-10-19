@@ -1,5 +1,8 @@
+/* =========================================================
+   VARIABLES
+   ========================================================= */
 :root {
-  /* --- Colores base --- */
+  /* Colores base */
   --color-fondo: #ffffff;
   --color-superficie: #f7f7f7; /* hover, cabeceras de tabla, bloques */
   --color-borde-suave: #ebebeb; /* separadores */
@@ -8,16 +11,16 @@
   --color-texto: #222222;
   --color-texto-secundario: #717171; /* precios, fechas, descripciones */
 
-  /* --- Botón principal --- */
+  /* Botón principal */
   --color-boton: #222222;
   --color-boton-hover: #000000;
 
-  /* --- Acento: enlaces, foco,borde de búsqueda y mensajes de éxito --- */
+  /* Acento: enlaces, foco, borde de búsqueda y mensajes de éxito */
   --color-acento: #222222;
   --color-acento-suave: color-mix(in srgb, var(--color-acento) 6%, white);
   --color-acento-halo: color-mix(in srgb, var(--color-acento) 20%, transparent);
 
-  /* --- Estados --- */
+  /* Estados */
   --color-exito-fondo: var(--color-acento-suave);
   --color-exito-texto: var(--color-acento);
   --color-aviso-fondo: #fff6e5;
@@ -25,19 +28,25 @@
   --color-error-fondo: #fdecec;
   --color-error-texto: #a12b2b;
 
-  /* --- Tipografía --- */
+  /* Mapa */
+  --color-marcador-usuario: #1a6fdb;
+  --color-ruta: #6d28d9;
+  --color-inicio: #15803d;
+  --color-fin: #b91c1c;
+
+  /* Tipografía */
   --fuente: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --texto-xs: 0.75rem; /* etiquetas */
-  --texto-sm: 0.875rem; /* texto secundario, botones, tablas */
-  --texto-base: 1rem; /* texto normal */
-  --texto-lg: 1.25rem; /* títulos de sección */
-  --texto-xl: 1.75rem; /* título de página */
+  --texto-xs: 0.75rem;
+  --texto-sm: 0.875rem;
+  --texto-base: 1rem;
+  --texto-lg: 1.25rem;
+  --texto-xl: 1.75rem;
   --peso-normal: 400;
   --peso-medio: 500;
   --peso-semi: 600;
   --peso-fuerte: 700;
 
-  /* --- Espaciado --- */
+  /* Espaciado */
   --esp-1: 0.25rem;
   --esp-2: 0.5rem;
   --esp-3: 1rem;
@@ -45,7 +54,7 @@
   --esp-5: 2rem;
   --esp-6: 3rem;
 
-  /* --- Formas, sombra, movimiento, ancho --- */
+  /* Formas, sombra, movimiento, ancho */
   --radio-sm: 8px; /* botones y campos */
   --radio-md: 14px; /* tarjetas y contenedores */
   --radio-pill: 9999px; /* búsqueda y etiquetas */
@@ -54,7 +63,9 @@
   --ancho-contenedor: 1280px;
 }
 
-/* ---------- Base ---------- */
+/* =========================================================
+   BASE
+   ========================================================= */
 *,
 *::before,
 *::after {
@@ -96,11 +107,16 @@ a:hover {
   outline: 2px solid var(--color-acento);
   outline-offset: 2px;
 }
+[hidden] {
+  display: none !important;
+}
 
-/* ---------- Estructura ----------
+/* =========================================================
+    ESTRUCTURA
    Uso: <main class="contenedor pagina"> ... </main>
-   .pila = hijos apilados con separación | .fila = hijos en línea
-   .cuadricula = tarjetas que se acomodan solas */
+   .pila = hijos apilados | .fila = hijos en línea
+   .cuadricula = tarjetas que se acomodan solas
+   ========================================================= */
 .contenedor {
   width: 100%;
   max-width: var(--ancho-contenedor);
@@ -112,9 +128,13 @@ a:hover {
   padding: 0 var(--esp-5);
 }
 .pagina {
+  flex: 1 0 auto;
   padding-top: var(--esp-5);
   padding-bottom: var(--esp-6);
-  min-height: 60vh;
+}
+/* Login y registro: columna centrada en pantallas anchas */
+.pagina--estrecha {
+  max-width: 560px;
 }
 .seccion {
   margin-top: var(--esp-5);
@@ -137,7 +157,9 @@ a:hover {
   gap: var(--esp-4);
 }
 
-/* ---------- Texto ---------- */
+/* =========================================================
+    TEXTO
+   ========================================================= */
 .titulo-pagina {
   font-size: var(--texto-xl);
   font-weight: var(--peso-fuerte);
@@ -166,7 +188,9 @@ a:hover {
   white-space: nowrap;
 }
 
-/* ---------- Cabecera y menú ---------- */
+/* =========================================================
+    CABECERA, MENÚ Y PIE
+   ========================================================= */
 .cabecera {
   background: var(--color-fondo);
   border-bottom: 1px solid var(--color-borde-suave);
@@ -219,9 +243,11 @@ a:hover {
   text-align: center;
 }
 
-/* ---------- Botones ----------
+/* =========================================================
+    BOTONES
    Principal: crear, guardar, enviar (uno por pantalla).
-   Secundario: editar, cancelar. Texto: desactivar, acciones suaves. */
+   Secundario: editar, cancelar. Texto: acciones suaves.
+   ========================================================= */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -237,14 +263,18 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
   transition:
-    background var(--transicion),
-    border-color var(--transicion);
+          background var(--transicion),
+          border-color var(--transicion);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .btn--principal {
   background: var(--color-boton);
   color: #ffffff;
 }
-.btn--principal:hover {
+.btn--principal:hover:not(:disabled) {
   background: var(--color-boton-hover);
 }
 .btn--secundario {
@@ -252,14 +282,14 @@ a:hover {
   color: var(--color-texto);
   border-color: var(--color-texto);
 }
-.btn--secundario:hover {
+.btn--secundario:hover:not(:disabled) {
   background: var(--color-superficie);
 }
 .btn--texto {
   background: transparent;
   color: var(--color-texto);
 }
-.btn--texto:hover {
+.btn--texto:hover:not(:disabled) {
   background: var(--color-superficie);
 }
 .btn--peque {
@@ -269,8 +299,10 @@ a:hover {
   width: 100%;
 }
 
-/* ---------- Formularios ----------
-   <div class="campo"> <label> + <input class="input"> + <p class="campo__error"> </div> */
+/* =========================================================
+    FORMULARIOS
+   <div class="campo"> <label> + <input class="input"> + <p class="campo__error"> </div>
+   ========================================================= */
 .formulario {
   max-width: 480px;
 }
@@ -293,8 +325,8 @@ a:hover {
   border: 1px solid var(--color-borde-campo);
   border-radius: var(--radio-sm);
   transition:
-    border-color var(--transicion),
-    box-shadow var(--transicion);
+          border-color var(--transicion),
+          box-shadow var(--transicion);
 }
 .input:focus {
   outline: none;
@@ -311,7 +343,7 @@ textarea.input {
 .input--error:focus {
   border-color: var(--color-error-texto);
   box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--color-error-texto) 20%, transparent);
+  color-mix(in srgb, var(--color-error-texto) 20%, transparent);
 }
 .campo__ayuda {
   margin: var(--esp-1) 0 0;
@@ -324,9 +356,10 @@ textarea.input {
   color: var(--color-error-texto);
 }
 
-/* ---------- Tarjetas ----------
-   Con foto: líneas de transporte. 
-   Con .tarjeta--enlace toda la tarjeta es un enlace. */
+/* =========================================================
+    TARJETAS
+   Con .tarjeta--enlace toda la tarjeta es un enlace.
+   ========================================================= */
 .tarjeta {
   background: var(--color-fondo);
   border: 1px solid var(--color-borde);
@@ -369,8 +402,10 @@ textarea.input {
   color: var(--color-texto-secundario);
 }
 
-/* ---------- Tablas ----------
-   <div class="tabla-contenedor"><table class="tabla"> ... */
+/* =========================================================
+    TABLAS
+   <div class="tabla-contenedor"><table class="tabla"> ...
+   ========================================================= */
 .tabla-contenedor {
   overflow-x: auto;
   border: 1px solid var(--color-borde);
@@ -396,13 +431,22 @@ textarea.input {
 .tabla tbody tr:last-child td {
   border-bottom: 0;
 }
+.tabla tr[data-lat] {
+  cursor: pointer;
+}
+.tabla tr[data-lat]:hover td,
+.tabla__fila--activa td {
+  background: var(--color-superficie);
+}
 .tabla__acciones {
   display: flex;
   justify-content: flex-end;
   gap: var(--esp-2);
 }
 
-/* ---------- Etiquetas de estado ---------- */
+/* =========================================================
+    ETIQUETAS, MENSAJES Y ESTADO VACÍO
+   ========================================================= */
 .etiqueta {
   display: inline-block;
   padding: 2px 10px;
@@ -429,7 +473,6 @@ textarea.input {
   border-color: transparent;
 }
 
-/* ---------- Mensajes y banners ----------*/
 .mensaje {
   margin-bottom: var(--esp-4);
   padding: var(--esp-3) var(--esp-4);
@@ -455,7 +498,6 @@ textarea.input {
   font-weight: var(--peso-semi);
 }
 
-/* ---------- Estado vacío ---------- */
 .vacio {
   padding: var(--esp-6) var(--esp-4);
   text-align: center;
@@ -470,7 +512,9 @@ textarea.input {
   color: var(--color-texto);
 }
 
-/* ---------- Barra de búsqueda ---------- */
+/* =========================================================
+    BÚSQUEDA
+   ========================================================= */
 .busqueda {
   display: flex;
   align-items: center;
@@ -499,9 +543,15 @@ textarea.input {
   border-radius: var(--radio-pill);
 }
 
-/* ---------- Páginas de error ---------- */
+/* =========================================================
+    PÁGINAS: inicio, error, cerca de mí
+   ========================================================= */
+.hero {
+  padding: var(--esp-2) 0 var(--esp-6);
+  text-align: center;
+}
+
 .pagina-error {
-  margin-bottom: auto;
   padding-top: var(--esp-6);
   text-align: center;
 }
@@ -512,79 +562,17 @@ textarea.input {
   line-height: 1;
   color: var(--color-texto-secundario);
 }
-/* ---------- Inicio ---------- */
-.hero {
-  padding: var(--esp-2) 0 var(--esp-6);
-  text-align: center;
-}
-
-
-/* ---------- Mapa ----------
-   <div id="mapa" class="mapa"></div>; con .mapa--alto para vistas de pantalla completa.
-   isolation evita que los controles de Leaflet (z-index alto) tapen otros elementos. */
-.mapa {
-  --color-marcador-usuario: #1a6fdb;
-  width: 100%;
-  height: 420px;
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-md);
-  overflow: hidden;
-  background: var(--color-superficie);
-  isolation: isolate;
-}
-.mapa--alto {
-  height: 520px;
-}
-/* Respeta el atributo hidden aunque otra clase defina display */
-[hidden] {
-  display: none !important;
-}
-/* ---------- Mapa del itinerario ---------- */
-.mapa .ruta {
-  stroke: var(--color-boton);
-  stroke-width: 4px;
-  stroke-opacity: 0.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.tabla tr[data-lat] {
-  cursor: pointer;
-}
-.tabla__fila--activa td {
-  background: var(--color-superficie);
-}
-
-@media (max-width: 640px) {
-  .mapa {
-    height: 320px;
-  }
-  .mapa--alto {
-    height: 400px;
-  }
-}
-.marcador {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--color-fondo);
-  border-radius: var(--radio-pill);
-  background: var(--color-boton);
-  color: var(--color-fondo);
-  box-shadow: var(--sombra-suave);
-  font-size: var(--texto-xs);
-  font-weight: var(--peso-semi);
-}
-.marcador--usuario {
-  background: var(--color-marcador-usuario);
-  box-shadow: 0 0 0 6px
-  color-mix(in srgb, var(--color-marcador-usuario) 25%, transparent);
-}
 
 .ubicacion {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: var(--esp-4);
   align-items: start;
+}
+.ubicacion__lista {
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: var(--esp-1);
 }
 .lista-puntos {
   display: grid;
@@ -601,19 +589,20 @@ textarea.input {
   box-shadow: var(--sombra-suave);
 }
 .punto--activo {
-  border-color: var(--color-texto);
+  border-color: var(--color-ruta);
+  box-shadow: 0 0 0 1px var(--color-ruta);
 }
 .punto__cabecera {
   display: flex;
   gap: var(--esp-3);
   align-items: flex-start;
 }
+.punto__cabecera p {
+  margin: 0;
+}
 .punto__titulo {
   font-size: var(--texto-base);
   font-weight: var(--peso-semi);
-}
-.punto__cabecera p {
-  margin: 0;
 }
 .punto__lineas {
   display: grid;
@@ -629,15 +618,131 @@ textarea.input {
   font-weight: var(--peso-medio);
 }
 
+/* =========================================================
+    MAPA (Leaflet)
+   <div id="mapa" class="mapa"></div>; .mapa--alto para pantalla completa.
+   isolation evita que los controles de Leaflet tapen otros elementos.
+   ========================================================= */
+.mapa {
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  overflow: hidden;
+  background: var(--color-superficie);
+  isolation: isolate;
+}
+.mapa--alto {
+  height: 520px;
+}
+.mapa.leaflet-container {
+  font-family: var(--fuente);
+}
+
+/* Líneas: borde blanco debajo + color encima para que se lean sobre cualquier calle */
+.mapa .ruta-borde,
+.mapa .ruta,
+.mapa .ruta-usuario {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mapa .ruta-borde {
+  stroke: #ffffff;
+  stroke-width: 9px;
+  stroke-opacity: 0.95;
+}
+.mapa .ruta {
+  stroke: var(--color-ruta);
+  stroke-width: 5px;
+  stroke-opacity: 1;
+}
+.mapa .ruta-usuario {
+  stroke: var(--color-marcador-usuario);
+  stroke-width: 4px;
+  stroke-dasharray: 0.1 9; /* puntos redondos */
+}
+
+/* Marcadores. No usar transform aquí, Leaflet lo usa para posicionarlos. */
+.marcador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-fondo);
+  border-radius: var(--radio-pill);
+  background: var(--color-boton);
+  color: var(--color-fondo);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semi);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+          background var(--transicion),
+          box-shadow var(--transicion);
+}
+.marcador:hover {
+  box-shadow:
+          0 0 0 4px color-mix(in srgb, var(--color-boton) 25%, transparent),
+          0 1px 4px rgb(0 0 0 / 0.4);
+}
+.marcador--inicio {
+  background: var(--color-inicio);
+}
+.marcador--fin {
+  background: var(--color-fin);
+}
+.marcador--activo,
+.marcador--activo:hover {
+  background: var(--color-ruta);
+  box-shadow:
+          0 0 0 5px color-mix(in srgb, var(--color-ruta) 30%, transparent),
+          0 1px 4px rgb(0 0 0 / 0.4);
+}
+.marcador--usuario {
+  background: var(--color-marcador-usuario);
+  border-width: 3px;
+  cursor: default;
+  animation: pulso 2s ease-out infinite;
+}
+@keyframes pulso {
+  0% {
+    box-shadow: 0 0 0 0
+    color-mix(in srgb, var(--color-marcador-usuario) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 16px
+    color-mix(in srgb, var(--color-marcador-usuario) 0%, transparent);
+  }
+}
+
+/* Popups */
+.mapa .leaflet-popup-content-wrapper {
+  border-radius: var(--radio-sm);
+}
+.mapa .leaflet-popup-content {
+  margin: var(--esp-2) var(--esp-3);
+  font-size: var(--texto-sm);
+}
+.mapa .leaflet-popup-content p {
+  margin: 0 0 var(--esp-2);
+}
+
+/* =========================================================
+   ADAPTACIÓN
+   ========================================================= */
 @media (max-width: 900px) {
   .ubicacion {
     grid-template-columns: 1fr;
   }
+  .ubicacion__lista {
+    max-height: none;
+    overflow: visible;
+  }
 }
-
-/* ---------- Adaptación y accesibilidad ---------- */
 @media (max-width: 640px) {
-  .contenedor {
+  .contenedor,
+  .contenedor--completo {
     padding: 0 var(--esp-3);
   }
   .cabecera__interior {
@@ -647,9 +752,22 @@ textarea.input {
   .tabla td {
     padding: var(--esp-2);
   }
+  .mapa {
+    height: 320px;
+  }
+  .mapa--alto {
+    height: 400px;
+  }
 }
+
+/* =========================================================
+   ACCESIBILIDAD
+   ========================================================= */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     transition: none !important;
+    animation: none !important;
   }
 }
