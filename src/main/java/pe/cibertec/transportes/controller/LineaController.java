@@ -27,7 +27,9 @@ public class LineaController {
 
   @GetMapping("/lineas")
   public String listar(Model model) {
-    model.addAttribute("lineas", lineaService.listarActivas());
+    var lineas = lineaService.listarActivas();
+    model.addAttribute("lineas", lineas);
+    model.addAttribute("imagenesPorLinea", LineaImagenes.porLinea(lineas));
     return "linea/lista";
   }
 
@@ -84,4 +86,5 @@ public class LineaController {
     redirect.addFlashAttribute("exito", "Línea «" + linea.getNombre() + "» activada nuevamente.");
     return REDIRECT_ADMIN;
   }
+
 }

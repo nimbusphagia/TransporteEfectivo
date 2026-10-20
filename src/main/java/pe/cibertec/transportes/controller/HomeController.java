@@ -22,14 +22,18 @@ public class HomeController {
 
   @GetMapping("/")
   public String inicio(Model model) {
-    model.addAttribute("lineas", lineasDeEjemplo());
+    List<LineaTransporte> lineas = lineasDeEjemplo();
+    model.addAttribute("lineas", lineas);
+    model.addAttribute("imagenesPorLinea", LineaImagenes.porLinea(lineas));
     model.addAttribute("alerta", alertaDeEjemplo());
     return "home/index";
   }
 
   @GetMapping("/buscar")
   public String buscar(@RequestParam(name = "q", required = false) String q, Model model) {
-    model.addAttribute("lineas", lineasDeEjemplo());
+    List<LineaTransporte> lineas = lineasDeEjemplo();
+    model.addAttribute("lineas", lineas);
+    model.addAttribute("imagenesPorLinea", LineaImagenes.porLinea(lineas));
     model.addAttribute("alerta", alertaDeEjemplo());
 
     if (q != null && !q.trim().isEmpty()) {
