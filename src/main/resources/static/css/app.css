@@ -177,6 +177,12 @@ a:hover {
   font-weight: var(--peso-semi);
   margin-bottom: var(--esp-2);
 }
+.subtitulo-seccion {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semi);
+  color: var(--color-texto-secundario);
+  margin-bottom: var(--esp-2);
+}
 .texto-secundario {
   color: var(--color-texto-secundario);
 }
@@ -690,7 +696,7 @@ textarea.input {
     PÁGINAS: inicio, error, cerca de mí
    ========================================================= */
 .hero {
-  padding: var(--esp-2) 0 var(--esp-6);
+  padding: var(--esp-2) 0;
   text-align: center;
 }
 

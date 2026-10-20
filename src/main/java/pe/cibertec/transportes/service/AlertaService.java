@@ -22,10 +22,10 @@ public class AlertaService {
     }
 
     public AlertaTrafico ultimaActiva() {
-        return alertaRepository.findTopByOrderByCreatedAtDesc().orElse(null);
+        return alertaRepository.findTopByActivoTrueOrderByCreatedAtDesc().orElse(null);
     }
 
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         AlertaTrafico alerta = alertaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Alerta no encontrada"));
         alertaRepository.delete(alerta);
