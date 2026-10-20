@@ -32,7 +32,7 @@ public class AlertaController {
         return "redirect:/admin/alertas";
     }
 
-    @GetMapping("/admin/alertas/eliminar/{id}")
+    @DeleteMapping("/admin/alertas/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
         alertaService.eliminar(id);
         return "redirect:/admin/alertas";

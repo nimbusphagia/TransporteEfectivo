@@ -886,9 +886,6 @@ textarea.input {
 
 /* Marcadores. No usar transform aquí, Leaflet lo usa para posicionarlos. */
 .marcador {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 2px solid var(--color-fondo);
   border-radius: var(--radio-pill);
   background: var(--color-boton);
@@ -901,6 +898,11 @@ textarea.input {
   transition:
           background var(--transicion),
           box-shadow var(--transicion);
+}
+.mapa .marcador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .marcador:hover {
   box-shadow:
