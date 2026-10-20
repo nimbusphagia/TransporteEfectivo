@@ -20,4 +20,6 @@ public interface LineaTransporteRepository extends JpaRepository<LineaTransporte
   boolean existsByNombreIgnoreCase(String nombre);
 
   boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
+
+  List<LineaTransporte> findByActivoTrueAndNombreContainingIgnoreCaseOrderByNombreAsc(String nombre);
 }

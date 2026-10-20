@@ -24,6 +24,13 @@ public class LineaService {
     return lineaRepository.findByActivoTrueOrderByNombreAsc();
   }
 
+  public List<LineaTransporte> buscarActivasPorNombre(String termino) {
+    if (termino == null || termino.isBlank()) {
+      return List.of();
+    }
+    return lineaRepository.findByActivoTrueAndNombreContainingIgnoreCaseOrderByNombreAsc(termino.trim());
+  }
+
   public List<LineaTransporte> listarTodas() {
     return lineaRepository.findAllByOrderByNombreAsc();
   }

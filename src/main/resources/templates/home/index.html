@@ -47,49 +47,79 @@
   </section>
 
   <section class="hero">
-    <h1 class="titulo-pagina">¿A dónde quieres ir?</h1>
+    <h1 class="titulo-pagina">¿Aún no conoces tu paradero?</h1>
     <p class="texto-secundario">
       Consulta líneas, paraderos y alertas antes de salir.
     </p>
 
     <form class="busqueda" th:action="@{/buscar}" method="get">
-      <label class="solo-lectores" for="q">Buscar paradero</label>
+      <label class="solo-lectores" for="q">Buscar línea o paradero</label>
       <input
               id="q"
               class="busqueda__input"
               name="q"
-              placeholder="Miraflores, Javier Prado…"
+              placeholder="Metropolitano, Javier Prado…"
               th:value="${query}"
       />
       <button class="btn btn--principal" type="submit">Buscar</button>
     </form>
   </section>
 
-  <!-- Sección de Resultados de Búsqueda (Módulo 7) -->
+  <!-- Resultados de búsqueda -->
   <section class="seccion" th:if="${query != null}">
     <h2 class="titulo-seccion">Resultados para: "<span th:text="${query}"></span>"</h2>
 
-    <div class="cuadricula" th:if="${!#lists.isEmpty(resultadosBusqueda)}">
-      <div class="tarjeta" th:each="p : ${resultadosBusqueda}">
-        <div class="tarjeta__cuerpo">
-          <h3 class="tarjeta__titulo" th:text="${p.nombre}">Nombre Paradero</h3>
-          <p class="tarjeta__detalle" th:if="${p.linea != null}" th:text="'Línea: ' + ${p.linea.nombre}">Línea</p>
-          <p class="tarjeta__detalle" th:if="${p.linea != null and p.linea.costoPasaje != null}"
-             th:text="'Costo: S/ ' + ${#numbers.formatDecimal(p.linea.costoPasaje, 1, 'NONE', 2, 'POINT')}">
-            Costo
-          </p>
+    <th:block th:if="${!#lists.isEmpty(lineasEncontradas)}">
+      <h3 class="subtitulo-seccion">Líneas</h3>
+      <div class="cuadricula cuadricula-lineas">
+        <a
+                class="tarjeta tarjeta--enlace tarjeta-linea"
+                th:each="l : ${lineasEncontradas}"
+                th:href="@{/lineas/{id}/paraderos(id=${l.id})}"
+        >
+          <div class="tarjeta__cuerpo">
+            <h3 class="tarjeta__titulo" th:text="${l.nombre}">Corredor Azul</h3>
+            <p
+                    class="tarjeta__detalle"
+                    th:text="'S/ ' + ${#numbers.formatDecimal(l.costoPasaje, 1, 'NONE', 2, 'POINT')} + ' por viaje'"
+            >
+              S/ 1.50 por viaje
+            </p>
+            <span class="tarjeta-linea__enlace">Ver itinerario</span>
+          </div>
+          <img
+                  class="tarjeta__imagen"
+                  th:src="@{${imagenesPorLinea[l.id]}}"
+                  th:alt="${l.nombre}"
+          />
+        </a>
+      </div>
+    </th:block>
+
+    <th:block th:if="${!#lists.isEmpty(resultadosBusqueda)}">
+      <h3 class="subtitulo-seccion">Paraderos</h3>
+      <div class="cuadricula">
+        <div class="tarjeta" th:each="p : ${resultadosBusqueda}">
+          <div class="tarjeta__cuerpo">
+            <h3 class="tarjeta__titulo" th:text="${p.nombre}">Nombre Paradero</h3>
+            <p class="tarjeta__detalle" th:if="${p.linea != null}" th:text="'Línea: ' + ${p.linea.nombre}">Línea</p>
+            <p class="tarjeta__detalle" th:if="${p.linea != null and p.linea.costoPasaje != null}"
+               th:text="'Costo: S/ ' + ${#numbers.formatDecimal(p.linea.costoPasaje, 1, 'NONE', 2, 'POINT')}">
+              Costo
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </th:block>
 
-    <div class="vacio" th:if="${#lists.isEmpty(resultadosBusqueda)}">
+    <div class="vacio" th:if="${#lists.isEmpty(lineasEncontradas) and #lists.isEmpty(resultadosBusqueda)}">
       <p class="vacio__titulo">No se encontraron resultados</p>
-      <p>No hay paraderos que coincidan con "<span th:text="${query}"></span>". Intenta con otro término.</p>
+      <p>No hay líneas ni paraderos que coincidan con "<span th:text="${query}"></span>". Intenta con otro término.</p>
     </div>
   </section>
 
   <div
-          class="mensaje mensaje--aviso"
+          class="seccion mensaje mensaje--aviso"
           role="alert"
           th:if="${alerta != null}"
   >

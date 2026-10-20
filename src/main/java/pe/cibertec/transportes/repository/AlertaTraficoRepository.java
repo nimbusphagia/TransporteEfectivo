@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AlertaTraficoRepository extends JpaRepository<AlertaTrafico, Integer> {
+public interface AlertaTraficoRepository extends JpaRepository<AlertaTrafico, Long> {
     List<AlertaTrafico> findAllByOrderByCreatedAtDesc();
     Optional<AlertaTrafico> findTopByOrderByCreatedAtDesc();
+    Optional<AlertaTrafico> findTopByActivoTrueOrderByCreatedAtDesc();
 }
