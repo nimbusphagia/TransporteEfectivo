@@ -2,37 +2,44 @@
    VARIABLES
    ========================================================= */
 :root {
-  /* Colores base */
-  --color-fondo: #ffffff;
-  --color-superficie: #f7f7f7; /* hover, cabeceras de tabla, bloques */
-  --color-borde-suave: #ebebeb; /* separadores */
-  --color-borde: #dddddd; /* tarjetas, tablas */
-  --color-borde-campo: #8a8a8a; /* campos de formulario */
-  --color-texto: #222222;
-  --color-texto-secundario: #717171; /* precios, fechas, descripciones */
+  /* Paleta azul tomada de la referencia adjunta */
+  --color-fondo: #eaf2f7;
+  --color-superficie: #c9dce8;
+  --color-borde-suave: #d9e6ee;
+  --color-borde: #8eabc2;
+  --color-borde-campo: #3e5d78;
+  --color-campo-fondo: #eaf2f7;
+  --color-campo-fondo: #ffffff;
+  --color-texto-secundario: #3e5d78;
+  --color-blanco: #ffffff;
+  --color-azul: #3e5d78;
+  --color-azul-marino: #3e5d78;
+  --color-azul-profundo: #1f2f46;
+  --color-lavanda: #eaf2f7;
+  --color-tarjeta-oscura: #ffffff;
 
   /* Botón principal */
-  --color-boton: #222222;
-  --color-boton-hover: #000000;
+  --color-boton: var(--color-azul-marino);
+  --color-boton-hover: var(--color-azul-profundo);
 
   /* Acento: enlaces, foco, borde de búsqueda y mensajes de éxito */
-  --color-acento: #222222;
-  --color-acento-suave: color-mix(in srgb, var(--color-acento) 6%, white);
+  --color-acento: var(--color-azul);
+  --color-acento-suave: color-mix(in srgb, var(--color-azul) 12%, var(--color-blanco));
   --color-acento-halo: color-mix(in srgb, var(--color-acento) 20%, transparent);
 
   /* Estados */
   --color-exito-fondo: var(--color-acento-suave);
   --color-exito-texto: var(--color-acento);
-  --color-aviso-fondo: #fff6e5;
-  --color-aviso-texto: #7a4b00;
-  --color-error-fondo: #fdecec;
-  --color-error-texto: #a12b2b;
+  --color-aviso-fondo: var(--color-superficie);
+  --color-aviso-texto: var(--color-azul-marino);
+  --color-error-fondo: var(--color-superficie);
+  --color-error-texto: var(--color-azul-profundo);
 
   /* Mapa */
-  --color-marcador-usuario: #1a6fdb;
-  --color-ruta: #6d28d9;
-  --color-inicio: #15803d;
-  --color-fin: #b91c1c;
+  --color-marcador-usuario: var(--color-azul);
+  --color-ruta: var(--color-azul-marino);
+  --color-inicio: var(--color-azul);
+  --color-fin: var(--color-azul-profundo);
 
   /* Tipografía */
   --fuente: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -192,8 +199,8 @@ a:hover {
     CABECERA, MENÚ Y PIE
    ========================================================= */
 .cabecera {
-  background: var(--color-fondo);
-  border-bottom: 1px solid var(--color-borde-suave);
+  background: var(--color-azul-profundo);
+  border-bottom: 3px solid var(--color-azul);
 }
 .cabecera__interior {
   display: flex;
@@ -204,10 +211,21 @@ a:hover {
   min-height: 72px;
 }
 .marca {
+  display: inline-flex;
+  align-items: center;
   font-size: var(--texto-lg);
   font-weight: var(--peso-fuerte);
-  color: var(--color-texto);
+  color: var(--color-blanco);
   text-decoration: none;
+}
+.marca__logo {
+  display: block;
+  width: 176px;
+  height: 54px;
+  padding: var(--esp-1);
+  border-radius: var(--radio-sm);
+  background: var(--color-blanco);
+  object-fit: contain;
 }
 .menu {
   display: flex;
@@ -220,13 +238,17 @@ a:hover {
   border-radius: var(--radio-sm);
   font-size: var(--texto-sm);
   font-weight: var(--peso-semi);
-  color: var(--color-texto);
+  color: var(--color-superficie);
   text-decoration: none;
   transition: background var(--transicion);
 }
 .menu__enlace:hover,
 .menu__enlace[aria-current="page"] {
-  background: var(--color-superficie);
+  background: var(--color-boton);
+  color: var(--color-blanco);
+}
+.menu__enlace[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 var(--color-azul);
 }
 .menu__usuario {
   display: flex;
@@ -235,11 +257,33 @@ a:hover {
   margin-left: var(--esp-2);
   font-size: var(--texto-sm);
 }
+.menu__usuario form {
+  margin: 0;
+}
+.menu__usuario .texto-secundario {
+  color: var(--color-borde);
+}
+.menu__usuario .btn--texto {
+  color: var(--color-blanco);
+}
+.menu__usuario .btn--texto:hover:not(:disabled) {
+  background: var(--color-boton);
+}
+.menu__usuario .btn--secundario {
+  background: transparent;
+  color: var(--color-blanco);
+  border-color: var(--color-borde-campo);
+}
+.menu__usuario .btn--secundario:hover:not(:disabled) {
+  background: var(--color-boton);
+}
+
 .pie {
-  border-top: 1px solid var(--color-borde-suave);
+  border-top: 1px solid var(--color-boton);
   padding: var(--esp-4) 0;
   font-size: var(--texto-sm);
-  color: var(--color-texto-secundario);
+  color: var(--color-borde);
+  background: var(--color-azul-profundo);
   text-align: center;
 }
 
@@ -263,8 +307,11 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
   transition:
-          background var(--transicion),
-          border-color var(--transicion);
+    background var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion),
+    box-shadow var(--transicion),
+    transform var(--transicion);
 }
 .btn:disabled {
   opacity: 0.5;
@@ -272,18 +319,22 @@ a:hover {
 }
 .btn--principal {
   background: var(--color-boton);
-  color: #ffffff;
+  color: var(--color-blanco);
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--color-azul-profundo) 18%, transparent);
 }
 .btn--principal:hover:not(:disabled) {
   background: var(--color-boton-hover);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-azul-profundo) 20%, transparent);
+  transform: translateY(-1px);
 }
 .btn--secundario {
-  background: var(--color-fondo);
+  background: #F5F8FB;
   color: var(--color-texto);
-  border-color: var(--color-texto);
+  border-color: #B8CBD9;
 }
 .btn--secundario:hover:not(:disabled) {
-  background: var(--color-superficie);
+  background: #E1EBF2;
+   border-color: #8EABC2;
 }
 .btn--texto {
   background: transparent;
@@ -291,12 +342,29 @@ a:hover {
 }
 .btn--texto:hover:not(:disabled) {
   background: var(--color-superficie);
+  color: var(--color-acento);
 }
 .btn--peque {
   padding: 6px 12px;
 }
+
 .btn--bloque {
   width: 100%;
+}
+
+/* Acciones resaltadas en las pantallas de administración de líneas y paraderos */
+.admin-lineas .btn,
+.admin-paraderos .btn {
+  background: var(--color-azul);
+  border-color: var(--color-azul);
+  color: var(--color-blanco);
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--color-azul-profundo) 14%, transparent);
+}
+.admin-lineas .btn:hover:not(:disabled),
+.admin-paraderos .btn:hover:not(:disabled) {
+  background: var(--color-azul-marino);
+  border-color: var(--color-azul-marino);
+  color: var(--color-blanco);
 }
 
 /* =========================================================
@@ -321,12 +389,13 @@ a:hover {
   padding: 10px 12px;
   font: inherit;
   color: var(--color-texto);
-  background: var(--color-fondo);
+  background: var(--color-campo-fondo);
   border: 1px solid var(--color-borde-campo);
   border-radius: var(--radio-sm);
   transition:
-          border-color var(--transicion),
-          box-shadow var(--transicion);
+    border-color var(--transicion),
+    box-shadow var(--transicion),
+    background var(--transicion);
 }
 .input:focus {
   outline: none;
@@ -361,11 +430,15 @@ textarea.input {
    Con .tarjeta--enlace toda la tarjeta es un enlace.
    ========================================================= */
 .tarjeta {
-  background: var(--color-fondo);
+  background: var(--color-blanco);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-md);
   overflow: hidden;
-  transition: box-shadow var(--transicion);
+  margin-bottom: 10px;
+  transition:
+    border-color var(--transicion),
+    box-shadow var(--transicion),
+    transform var(--transicion);
 }
 .tarjeta--enlace {
   display: block;
@@ -374,12 +447,15 @@ textarea.input {
 }
 .tarjeta--enlace:hover {
   box-shadow: var(--sombra-suave);
+  border-color: var(--color-borde-campo);
+  transform: translateY(-2px);
 }
 .tarjeta__imagen {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  background: var(--color-borde);
+  background: var(--color-lavanda);
+  border-radius: 10%;
 }
 .tarjeta__imagen--vacia {
   display: flex;
@@ -390,6 +466,7 @@ textarea.input {
 }
 .tarjeta__cuerpo {
   padding: var(--esp-3) var(--esp-4);
+  border-top: 1px solid var(--color-borde-suave);
 }
 .tarjeta__titulo {
   margin: 0 0 var(--esp-1);
@@ -401,6 +478,59 @@ textarea.input {
   font-size: var(--texto-sm);
   color: var(--color-texto-secundario);
 }
+.tarjeta__detalle + .tarjeta__detalle {
+  margin-top: var(--esp-1);
+}
+.cuadricula-lineas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tarjeta-linea {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 50%);
+  align-items: center;
+  min-height: 230px;
+  padding: var(--esp-3);
+  border-color: var(--color-superficie);
+  background: var(--color-tarjeta-oscura);
+  color: var(--color-texto);
+}
+.tarjeta-linea:hover {
+  border-color: var(--color-azul);
+  background: var(--color-tarjeta-oscura);
+}
+.tarjeta-linea .tarjeta__cuerpo {
+  padding: var(--esp-2);
+  border: 0;
+}
+.tarjeta-linea .tarjeta__titulo {
+  margin-bottom: var(--esp-2);
+  color: var(--color-texto);
+}
+.tarjeta-linea .tarjeta__detalle {
+  color: var(--color-texto-secundario);
+}
+.tarjeta-linea .tarjeta__imagen {
+  width: 100%;
+  height: 150px;
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: transparent;
+  object-fit: cover;
+}
+.tarjeta-linea__enlace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  margin-top: var(--esp-3);
+  padding: var(--esp-2) var(--esp-3);
+  border-radius: var(--radio-pill);
+  background: var(--color-azul-profundo);
+  color: var(--color-blanco);
+  font-weight: var(--peso-semi);
+}
+.tarjeta-linea:hover .tarjeta-linea__enlace {
+  background: var(--color-azul-marino);
+}
 
 /* =========================================================
     TABLAS
@@ -410,6 +540,7 @@ textarea.input {
   overflow-x: auto;
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-md);
+  background: var(--color-blanco);
 }
 .tabla {
   width: 100%;
@@ -425,8 +556,14 @@ textarea.input {
 }
 .tabla th {
   background: var(--color-superficie);
-  color: var(--color-texto-secundario);
+  color: var(--color-texto);
   font-weight: var(--peso-semi);
+}
+.tabla tbody tr {
+  transition: background var(--transicion);
+}
+.tabla tbody tr:hover {
+  background: color-mix(in srgb, var(--color-azul) 5%, var(--color-blanco));
 }
 .tabla tbody tr:last-child td {
   border-bottom: 0;
@@ -484,14 +621,17 @@ textarea.input {
 .mensaje--exito {
   background: var(--color-exito-fondo);
   color: var(--color-exito-texto);
+  border-left: 4px solid var(--color-acento);
 }
 .mensaje--aviso {
   background: var(--color-aviso-fondo);
   color: var(--color-aviso-texto);
+  border-left: 4px solid var(--color-borde-campo);
 }
 .mensaje--error {
   background: var(--color-error-fondo);
   color: var(--color-error-texto);
+  border-left: 4px solid var(--color-error-texto);
 }
 .mensaje__titulo {
   display: block;
@@ -522,20 +662,23 @@ textarea.input {
   max-width: 640px;
   padding: 6px 6px 6px var(--esp-4);
   margin: auto;
-  background: var(--color-fondo);
+  background: var(--color-blanco);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-pill);
   box-shadow: var(--sombra-suave);
 }
 .busqueda:focus-within {
   border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px var(--color-acento-halo);
 }
 .busqueda__input {
   flex: 1;
   min-width: 0;
   border: 0;
   outline: none;
-  background: transparent;
+  padding: var(--esp-2);
+  border-radius: var(--radio-sm);
+  background: var(--color-campo-fondo);
   font: inherit;
   color: var(--color-texto);
 }
@@ -549,6 +692,78 @@ textarea.input {
 .hero {
   padding: var(--esp-2) 0 var(--esp-6);
   text-align: center;
+}
+
+.carrusel {
+  position: relative;
+  margin-bottom: var(--esp-5);
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  background: var(--color-superficie);
+  box-shadow: var(--sombra-suave);
+}
+.carrusel__diapositiva {
+  display: none;
+  height: clamp(220px, 34vw, 380px);
+}
+.carrusel__diapositiva--activa {
+  display: block;
+}
+.carrusel__diapositiva img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.carrusel__control {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-pill);
+  background: color-mix(in srgb, var(--color-azul-profundo) 72%, transparent);
+  color: var(--color-blanco);
+  font: inherit;
+  font-size: var(--texto-lg);
+  cursor: pointer;
+  transition: background var(--transicion);
+}
+.carrusel__control:hover {
+  background: var(--color-boton);
+}
+.carrusel__control--anterior {
+  left: var(--esp-3);
+}
+.carrusel__control--siguiente {
+  right: var(--esp-3);
+}
+.carrusel__indicadores {
+  position: absolute;
+  right: 0;
+  bottom: var(--esp-3);
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--esp-2);
+}
+.carrusel__indicador {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 2px solid var(--color-blanco);
+  border-radius: var(--radio-pill);
+  background: transparent;
+  cursor: pointer;
+}
+.carrusel__indicador--activo {
+  background: var(--color-blanco);
 }
 
 .pagina-error {
@@ -688,6 +903,7 @@ textarea.input {
 }
 .marcador--inicio {
   background: var(--color-inicio);
+  color: var(--color-azul-profundo);
 }
 .marcador--fin {
   background: var(--color-fin);
@@ -732,6 +948,9 @@ textarea.input {
    ADAPTACIÓN
    ========================================================= */
 @media (max-width: 900px) {
+  .cuadricula-lineas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .ubicacion {
     grid-template-columns: 1fr;
   }
@@ -745,8 +964,19 @@ textarea.input {
   .contenedor--completo {
     padding: 0 var(--esp-3);
   }
+  .cuadricula-lineas {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-linea .tarjeta__imagen {
+    height: 130px;
+  }
   .cabecera__interior {
     padding-block: var(--esp-3);
+  }
+  .marca__logo {
+    width: 140px;
+    height: 44px;
   }
   .tabla th,
   .tabla td {
@@ -757,6 +987,13 @@ textarea.input {
   }
   .mapa--alto {
     height: 400px;
+  }
+  .carrusel__diapositiva {
+    height: 220px;
+  }
+  .carrusel__control {
+    width: 36px;
+    height: 36px;
   }
 }
 

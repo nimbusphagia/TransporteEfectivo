@@ -13,17 +13,12 @@
       </p>
 
       <section class="seccion">
-        <div class="cuadricula" th:if="${!#lists.isEmpty(lineas)}">
+        <div class="cuadricula cuadricula-lineas" th:if="${!#lists.isEmpty(lineas)}">
           <a
-            class="tarjeta tarjeta--enlace"
+            class="tarjeta tarjeta--enlace tarjeta-linea"
             th:each="l : ${lineas}"
             th:href="@{/lineas/{id}/paraderos(id=${l.id})}"
           >
-            <img
-              class="tarjeta__imagen"
-              th:src="${l.imagenUrl != null} ? @{${l.imagenUrl}} : @{/img/linea-default.svg}"
-              th:alt="${l.nombre}"
-            />
             <div class="tarjeta__cuerpo">
               <h2 class="tarjeta__titulo" th:text="${l.nombre}">Línea Azul</h2>
               <p
@@ -32,8 +27,13 @@
               >
                 S/ 1.50 por viaje
               </p>
-              <p class="tarjeta__detalle">Ver itinerario →</p>
+              <span class="tarjeta-linea__enlace">Ver itinerario</span>
             </div>
+            <img
+              class="tarjeta__imagen"
+              th:src="@{${imagenesPorLinea[l.id]}}"
+              th:alt="${l.nombre}"
+            />
           </a>
         </div>
 

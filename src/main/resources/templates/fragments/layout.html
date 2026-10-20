@@ -18,7 +18,13 @@
   <body>
     <header class="cabecera" th:fragment="header">
       <div class="cabecera__interior contenedor contenedor--completo">
-        <a class="marca" th:href="@{/}">Transporte Eficiente</a>
+        <a class="marca" th:href="@{/}" aria-label="Transporte Eficiente, inicio">
+          <img
+            class="marca__logo"
+            th:src="@{/img/logo.png}"
+            alt="Transporte Eficiente"
+          />
+        </a>
         <nav th:replace="~{fragments/navbar :: navbar}"></nav>
       </div>
     </header>
